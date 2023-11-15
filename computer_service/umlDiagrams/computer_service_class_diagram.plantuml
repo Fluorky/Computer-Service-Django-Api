@@ -1,0 +1,45 @@
+@startuml
+
+class CommonInfo {
+  +name: string
+  +price: int
+}
+
+class Person {
+  +name: string
+}
+
+class ServiceRequest {
+  +description: string
+  +requested_by: Customer
+  +requested_at: datetime
+}
+
+class Invoice {
+  +total_amount: decimal
+  +payment_status: boolean
+}
+
+class Part {
+  +description: string
+  +quantity_in_stock: int
+}
+
+class ServiceTechnician {
+  +surname: string
+  +specialization: string
+}
+
+class Customer {
+  +email: string
+  +phone_number: string
+}
+
+CommonInfo --|> ServiceRequest
+CommonInfo --|> Part
+Person --|> ServiceTechnician
+Person --|> Customer
+ServiceRequest --|> Invoice
+ServiceRequest --|> Customer
+
+@enduml

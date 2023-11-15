@@ -1,0 +1,37 @@
+@startuml
+
+participant "User" as User
+participant "ServiceRequest" as ServiceRequest
+participant "Technician" as Technician
+participant "Invoice" as Invoice
+
+User -> ServiceRequest: Create Service Request
+activate ServiceRequest
+
+ServiceRequest --> User: Service Request Created
+
+User -> ServiceRequest: Review Service Request
+activate ServiceRequest
+
+ServiceRequest -> Technician: Assign Technician
+activate Technician
+
+Technician -> ServiceRequest: Technician Assigned
+deactivate Technician
+
+ServiceRequest -> Technician: Perform Service
+activate Technician
+
+Technician -> ServiceRequest: Service Performed
+deactivate Technician
+
+ServiceRequest -> Invoice: Generate Invoice
+activate Invoice
+
+Invoice --> ServiceRequest: Invoice Generated
+deactivate Invoice
+
+ServiceRequest --> User: Service Request Completed
+deactivate ServiceRequest
+
+@enduml
