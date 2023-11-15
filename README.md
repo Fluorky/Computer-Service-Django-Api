@@ -1,4 +1,4 @@
 # Computer-Service-Django
-Project od Computer Service web aplication in Django
+Project of Computer Service web aplication in Django.
 
-The project is under development.
+The project is part of object-oriented design classes and the project is under development.
