@@ -7,7 +7,6 @@ class CommonInfo(models.Model):
     class Meta:
         abstract = True
 
-
 class Person(models.Model):
     name = models.CharField(max_length=100)
 
@@ -49,7 +48,7 @@ class ServiceTechnician(Person):
 
 class Customer(Person):
     email = models.EmailField()
-    phone_number = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=11)
 
     class Meta:
         verbose_name = 'Customer'

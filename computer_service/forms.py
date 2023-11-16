@@ -11,8 +11,22 @@ class InvoiceForm(forms.ModelForm):
         model = Invoice
         fields = '__all__'
 
-##TO DO##
-# Similar forms for Part, ServiceTechnician, and Customer
+class PartForm(forms.ModelForm):
+    class Meta:
+        model = Part
+        fields = '__all__'
+
+class ServiceTechnician(forms.ModelForm):
+    class Meta:
+        model = ServiceTechnician
+        fields = '__all__'
+
+class Customer(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+
+
 
 # ...
 
