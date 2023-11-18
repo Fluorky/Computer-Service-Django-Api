@@ -16,12 +16,12 @@ class PartForm(forms.ModelForm):
         model = Part
         fields = '__all__'
 
-class ServiceTechnician(forms.ModelForm):
+class ServiceTechnicianForm(forms.ModelForm):
     class Meta:
         model = ServiceTechnician
         fields = '__all__'
 
-class Customer(forms.ModelForm):
+class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = '__all__'
