@@ -6,9 +6,13 @@ from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer
 from .forms import ServiceRequestForm, InvoiceForm , PartForm, ServiceTechnicianForm, CustomerForm
 from django.urls import reverse
 
-# Create your views here.
+## TO DO ##
+# htmls 
+# css
+
 def index(request):
     return HttpResponse("Welcome in Computer service")
+    #return render(request, 'computerserviceapp/index.html') 
 
 def service_request_list(request):
     service_requests = ServiceRequest.objects.all()
