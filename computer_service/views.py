@@ -30,7 +30,7 @@ def service_request_create(request):
             return redirect('service_request_detail', pk=service_request.pk)
     else:
         form = ServiceRequestForm()
-    return render(request, 'computer_service/service_request_form.html', {'form': form})
+    return render(request, 'computer_service/forms/service_request_form.html', {'form': form})
 
 def service_request_edit(request, pk):
     service_request = get_object_or_404(ServiceRequest, pk=pk)
@@ -41,7 +41,7 @@ def service_request_edit(request, pk):
             return redirect('service_request_detail', pk=service_request.pk)
     else:
         form = ServiceRequestForm(instance=service_request)
-    return render(request, 'computer_service/service_request_form.html', {'form': form})
+    return render(request, 'computer_service/forms/service_request_form.html', {'form': form})
 
 def service_request_delete(request, pk):
     service_request = get_object_or_404(ServiceRequest, pk=pk)
@@ -68,7 +68,7 @@ def invoice_create(request):
             return redirect('invoice_detail', pk=invoice.pk)
     else:
         form = InvoiceForm()
-    return render(request, 'computer_service/invoice_form.html', {'form': form})
+    return render(request, 'computer_service/forms/invoice_form.html', {'form': form})
 
 def invoice_edit(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
@@ -79,7 +79,7 @@ def invoice_edit(request, pk):
             return redirect('invoice_detail', pk=invoice.pk)
     else:
         form = InvoiceForm(instance=invoice)
-    return render(request, 'computer_service/invoice_form.html', {'form': form})
+    return render(request, 'computer_service/forms/invoice_form.html', {'form': form})
 
 def invoice_delete(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
@@ -105,7 +105,7 @@ def part_create(request):
             return redirect('part_detail', pk=part.pk)
     else:
         form = PartForm()
-    return render(request, 'computer_service/part_form.html', {'form': form})
+    return render(request, 'computer_service/forms/part_form.html', {'form': form})
 
 def part_edit(request, pk):
     part = get_object_or_404(Part, pk=pk)
@@ -116,7 +116,7 @@ def part_edit(request, pk):
             return redirect('part_detail', pk=part.pk)
     else:
         form = PartForm(instance=part)
-    return render(request, 'computer_service/part_form.html', {'form': form})
+    return render(request, 'computer_service/forms/part_form.html', {'form': form})
 
 def part_delete(request, pk):
     part = get_object_or_404(Part, pk=pk)
@@ -142,7 +142,7 @@ def service_technician_create(request):
             return redirect('service_technician_detail', pk=service_technician.pk)
     else:
         form = ServiceTechnicianForm()
-    return render(request, 'computer_service/service_technician_form.html', {'form': form})
+    return render(request, 'computer_service/forms/service_technician_form.html', {'form': form})
 
 def service_technician_edit(request, pk):
     service_technician = get_object_or_404(ServiceTechnician, pk=pk)
@@ -153,7 +153,7 @@ def service_technician_edit(request, pk):
             return redirect('ServiceTechnician_detail', pk=service_technician.pk)
     else:
         form = ServiceTechnicianForm(instance=service_technician)
-    return render(request, 'computer_service/service_technician_form.html', {'form': form})
+    return render(request, 'computer_service/forms/service_technician_form.html', {'form': form})
 
 def service_technician_delete(request, pk):
     service_technician = get_object_or_404(ServiceTechnician, pk=pk)
@@ -179,7 +179,7 @@ def customer_create(request):
             return redirect('customer_detail', pk=customer.pk)
     else:
         form = CustomerForm()
-    return render(request, 'computer_service/customer_form.html', {'form': form})
+    return render(request, 'computer_service/forms/customer_form.html', {'form': form})
 
 def customer_edit(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
@@ -190,7 +190,7 @@ def customer_edit(request, pk):
             return redirect('customer_detail', pk=customer.pk)
     else:
         form = CustomerForm(instance=customer)
-    return render(request, 'computer_service/customer_form.html', {'form': form})
+    return render(request, 'computer_service/forms/customer_form.html', {'form': form})
 
 def customer_delete(request, pk):
     customer = get_object_or_404(Customer, pk=pk)

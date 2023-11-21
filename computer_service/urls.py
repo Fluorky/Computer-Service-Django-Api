@@ -10,15 +10,28 @@ urlpatterns = [
     path('service-request/<int:pk>/edit/', views.service_request_edit, name='service_request_edit'),
     path('service-request/<int:pk>/delete/', views.service_request_delete, name='service_request_delete'),
 
-    #path('invoice/', views.invoice_list, name='invoice_list'),
-    # Define similar URL patterns for Invoice Detail, Create, Update, Delete views...
+    path('invoice/', views.invoice_list, name='invoice_list'),
+    path('invoice/<int:pk>/', views.invoice_detail, name='invoice_detail'),
+    path('invoice/new/', views.invoice_create, name='invoice_create'),
+    path('invoice/<int:pk>/edit/', views.invoice_edit, name='invoice_edit'),
+    path('invoice/<int:pk>/delete/', views.invoice_delete, name='invoice_delete'),
 
-    #path('part/', views.part_list, name='part_list'),
-    # Define similar URL patterns for Part Detail, Create, Update, Delete views...
+    path('part/', views.part_list, name='part_list'),
+    path('part/<int:pk>/', views.part_detail, name='part_detail'),
+    path('part/new/', views.part_create, name='part_create'),
+    path('part/<int:pk>/edit/', views.part_edit, name='part_edit'),
+    path('part/<int:pk>/delete/', views.part_delete, name='part_delete'),
 
-    #path('service-technician/', views.service_technician_list, name='service_technician_list'),
-    # Define similar URL patterns for ServiceTechnician Detail, Create, Update, Delete views...
+    path('service-technician/', views.service_technician_list, name='service_technician_list'),
+    path('service-technician/<int:pk>/', views.service_technician_detail, name='service_technician_detail'),
+    path('service-technician/new/', views.service_technician_create, name='service_technician_create'),
+    path('service-technician/<int:pk>/edit/', views.service_technician_edit, name='service_technician_edit'),
+    path('service-technician/<int:pk>/delete/', views.service_technician_delete, name='service_technician_delete'),
 
-    #path('customer/', views.customer_list, name='customer_list'),
-    # Define similar URL patterns for Customer Detail, Create, Update, Delete views...
+    path('customer/', views.customer_list, name='customer_list'),
+    path('customer/<int:pk>/', views.customer_detail, name='customer_detail'),
+    path('customer/new/', views.customer_create, name='customer_create'),
+    path('customer/<int:pk>/edit/', views.customer_edit, name='customer_edit'),
+    path('customer/<int:pk>/delete/', views.customer_delete, name='customer_delete')
+
 ]

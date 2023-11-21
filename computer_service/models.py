@@ -2,7 +2,7 @@ from django.db import models
 
 class CommonInfo(models.Model):
     name = models.CharField(max_length=100)
-    price = models.PositiveIntegerField()
+    price = models.PositiveIntegerField(default=0)
 
     class Meta:
         abstract = True
@@ -15,7 +15,7 @@ class Person(models.Model):
 
 class ServiceRequest(CommonInfo):
     description = models.TextField()
-    requested_by = models.ForeignKey('Customer', on_delete=models.CASCADE)
+    requested_by = models.ForeignKey('Customer', on_delete=models.CASCADE) #or .SET_NULL, null=True)
     owned_by = models.ForeignKey('ServiceTechnician', on_delete=models.CASCADE)
     requested_at = models.DateTimeField(auto_now_add=True)
 
