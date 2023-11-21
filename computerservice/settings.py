@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "computer_service.apps.ComputerServiceConfig"
+    "computerserviceapp.apps.ComputerServiceConfig"
 ]
 
 MIDDLEWARE = [
