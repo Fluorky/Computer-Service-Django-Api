@@ -1,0 +1,13 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Customer Details{% endblock %}
+
+{% block content %}
+    <h2>{{ customer.name }} Details</h2>
+    <p>Email: {{ customer.email }}</p>
+    <p>Phone Number: {{ customer.phone_number }}</p>
+    <!-- To do -->
+    <!-- Add more details as needed -->
+    <a href="{% url 'customer_edit' pk=customer.pk %}">Edit</a>
+    <a href="{% url 'customer_delete' pk=customer.pk %}">Delete</a>
+{% endblock %}
