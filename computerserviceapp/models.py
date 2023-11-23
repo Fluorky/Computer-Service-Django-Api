@@ -3,15 +3,17 @@ from django.db import models
 class CommonInfo(models.Model):
     name = models.CharField(max_length=100)
     price = models.PositiveIntegerField(default=0)
-    surname = models.CharField(max_length=100)
+    
 
     class Meta:
         abstract = True
 
 class Person(models.Model):
     name = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100)
     email = models.EmailField()
     phone_number = models.CharField(max_length=11)
+    
 
     class Meta:
         abstract = True
