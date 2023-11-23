@@ -9,6 +9,8 @@ class CommonInfo(models.Model):
 
 class Person(models.Model):
     name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=11)
 
     class Meta:
         abstract = True
@@ -43,13 +45,18 @@ class ServiceTechnician(Person):
     surname = models.CharField(max_length=100)
     specialization = models.CharField(max_length=100)
 
+
     class Meta:
         verbose_name = 'Service Technician'
         verbose_name_plural = 'Service Technicians'
 
 class Customer(Person):
-    email = models.EmailField()
-    phone_number = models.CharField(max_length=11)
+    address_line1 = models.CharField(max_length=255, blank=True, null=True)
+    address_line2 = models.CharField(max_length=255, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=100, blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Customer'
