@@ -3,9 +3,16 @@
 {% block title %}Customer Details{% endblock %}
 
 {% block content %}
-    <h2>{{ customer.name }} Details</h2>
+    <h2>{{ customer.name }} {{customer.surname}} Details</h2>
     <p>Email: {{ customer.email }}</p>
     <p>Phone Number: {{ customer.phone_number }}</p>
+    <p>Address line 1: {{ customer.address_line1 }}</p>
+    <p>Addres line 2: {{ customer.address_line2 }}</p>
+    <p>Postal code: {{ customer.postal_code }}</p>
+    <p>City: {{ customer.city }}</p>
+    <p>State: {{ customer.state }}</p>
+    <p>Country: {{ customer.country }}</p>
+  
     <!-- To do -->
     <!-- Add more details as needed -->
     <a href="{% url 'customer_edit' pk=customer.pk %}">Edit</a>
