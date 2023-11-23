@@ -3,6 +3,7 @@ from django.db import models
 class CommonInfo(models.Model):
     name = models.CharField(max_length=100)
     price = models.PositiveIntegerField(default=0)
+    surname = models.CharField(max_length=100)
 
     class Meta:
         abstract = True
@@ -42,7 +43,7 @@ class Part(CommonInfo):
         verbose_name_plural = 'Parts'
 
 class ServiceTechnician(Person):
-    surname = models.CharField(max_length=100)
+   
     specialization = models.CharField(max_length=100)
 
 
@@ -51,6 +52,7 @@ class ServiceTechnician(Person):
         verbose_name_plural = 'Service Technicians'
 
 class Customer(Person):
+    
     address_line1 = models.CharField(max_length=255, blank=True, null=True)
     address_line2 = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
