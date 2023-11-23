@@ -1,0 +1,13 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Confirm Deletion{% endblock %}
+
+{% block content %}
+    <h2>Confirm Deletion</h2>
+    <p>Are you sure you want to delete {{ technician.name }} {{ technician.surname }}?</p>
+    <form method="post" action="{% url 'service_technician_delete' pk=technician.pk %}">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+    <a href="{% url 'service_technician_detail' pk=technician.pk %}">Cancel</a>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Service Request List{% endblock %}
+
+{% block content %}
+    <h2>Service Request List</h2>
+    <ul>
+        {% for service_request in service_requests %}
+            <li><a href="{% url 'service_request_detail' pk=service_request.pk %}">{{ service_request.description }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

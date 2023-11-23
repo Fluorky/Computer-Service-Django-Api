@@ -1,0 +1,12 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Part List{% endblock %}
+
+{% block content %}
+    <h2>Part List</h2>
+    <ul>
+        {% for part in parts %}
+            <li><a href="{% url 'part_detail' pk=part.pk %}">{{ part.description }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

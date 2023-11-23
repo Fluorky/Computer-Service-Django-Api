@@ -1,0 +1,12 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Invoice List{% endblock %}
+
+{% block content %}
+    <h2>Invoice List</h2>
+    <ul>
+        {% for invoice in invoices %}
+            <li><a href="{% url 'invoice_detail' pk=invoice.pk %}">Invoice {{ invoice.pk }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

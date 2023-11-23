@@ -1,0 +1,12 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Service Technician List{% endblock %}
+
+{% block content %}
+    <h2>Service Technician List</h2>
+    <ul>
+        {% for technician in technicians %}
+            <li><a href="{% url 'service_technician_detail' pk=technician.pk %}">{{ technician.name }} {{ technician.surname }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

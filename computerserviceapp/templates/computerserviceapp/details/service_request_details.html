@@ -1,0 +1,12 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Service Request Details{% endblock %}
+
+{% block content %}
+    <h2>{{ service_request.description }} Details</h2>
+    <p>Requested By: {{ service_request.requested_by.name }}</p>
+    <p>Requested At: {{ service_request.requested_at }}</p>
+    <!-- Add more details as needed -->
+    <a href="{% url 'service_request_edit' pk=service_request.pk %}">Edit</a>
+    <a href="{% url 'service_request_delete' pk=service_request.pk %}">Delete</a>
+{% endblock %}
