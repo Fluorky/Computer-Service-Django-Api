@@ -3,8 +3,11 @@
 {% block title %}Service Request Details{% endblock %}
 
 {% block content %}
-    <h2>{{ service_request.description }} Details</h2>
-    <p>Requested By: {{ service_request.requested_by.name }}</p>
+    <h2>Name: {{ service_request.name }} </h2>
+    <p>Requested By: {{ service_request.requested_by.name }} {{ service_request.requested_by.surname }}</p>
+    <p>Owned By: {{ service_request.owned_by.name }} {{ service_request.owned_by.surname }}</p>
+    <p>Details:  {{ service_request.description}}</p>
+    <p>Price:  {{ service_request.price}} $</p>
     <p>Requested At: {{ service_request.requested_at }}</p>
     <!-- Add more details as needed -->
     <a href="{% url 'service_request_edit' pk=service_request.pk %}">Edit</a>

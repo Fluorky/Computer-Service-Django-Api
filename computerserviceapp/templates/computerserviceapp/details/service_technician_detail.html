@@ -1,0 +1,14 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}Service Technician Details{% endblock %}
+
+{% block content %}
+   <h2>Details about</h2>
+    <h3>{{ service_technician.name }} {{ service_technician.surname }} </h3>
+    <p>Specialization: {{ service_technician.specialization }}</p>
+    <p>Email: {{ service_technician.email }}</p>
+    <p>Phone Number: {{ service_technician.phone_number }}</p>
+    <!-- Add more details as needed -->
+    <a href="{% url 'service_technician_edit' pk=service_technician.pk %}">Edit</a>
+    <a href="{% url 'service_technician_delete' pk=service_technician.pk %}">Delete</a>
+{% endblock %}

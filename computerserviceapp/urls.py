@@ -1,14 +1,22 @@
 from django.urls import path
 from . import views
+from .views import ServiceRequestListView, ServiceRequestDetailView, ServiceRequestCreateView, ServiceRequestUpdateView, ServiceRequestDeleteView
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('service-request/', views.service_request_list, name='service_request_list'),
-    path('service-request/<int:pk>/', views.service_request_detail, name='service_request_detail'),
-    path('service-request/new/', views.service_request_create, name='service_request_create'),
-    path('service-request/<int:pk>/edit/', views.service_request_edit, name='service_request_edit'),
-    path('service-request/<int:pk>/delete/', views.service_request_delete, name='service_request_delete'),
+    path('service-request/', ServiceRequestListView.as_view(), name='service_request_list'),
+    path('service-request/<int:pk>/', ServiceRequestDetailView.as_view(), name='service_request_detail'),
+    path('service-request/new/', ServiceRequestCreateView.as_view(), name='service_request_create'),
+    path('service-request/<int:pk>/edit/', ServiceRequestUpdateView.as_view(), name='service_request_edit'),
+    path('service-request/<int:pk>/delete/', ServiceRequestDeleteView.as_view(), name='service_request_delete'),
+
+    #path('service-request/', views.service_request_list, name='service_request_list'),
+    #path('service-request/<int:pk>/', views.service_request_detail, name='service_request_detail'),
+    #path('service-request/new/', views.service_request_create, name='service_request_create'),
+    #path('service-request/<int:pk>/edit/', views.service_request_edit, name='service_request_edit'),
+    #path('service-request/<int:pk>/delete/', views.service_request_delete, name='service_request_delete'),
+    
 
     path('invoice/', views.invoice_list, name='invoice_list'),
     path('invoice/<int:pk>/', views.invoice_detail, name='invoice_detail'),

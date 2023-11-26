@@ -5,7 +5,7 @@
 {% block content %}
     <h2>Service Technician List</h2>
     <ul>
-        {% for technician in technicians %}
+        {% for technician in service_technicians %}
             <li><a href="{% url 'service_technician_detail' pk=technician.pk %}">{{ technician.name }} {{ technician.surname }}</a></li>
         {% endfor %}
     </ul>

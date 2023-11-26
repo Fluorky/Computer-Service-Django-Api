@@ -4,7 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer
 from .forms import ServiceRequestForm, InvoiceForm , PartForm, ServiceTechnicianForm, CustomerForm
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 ## TO DO ##
 # htmls 
@@ -14,7 +15,58 @@ def index(request):
     #return HttpResponse("Welcome in Computer service")
     return render(request, 'computerserviceapp/index.html') 
 
-def service_request_list(request):
+
+class ServiceRequestListView(View):
+    def get(self, request):
+        service_requests = ServiceRequest.objects.all()
+        return render(request, 'computerserviceapp/lists/service_request_list.html', {'service_requests': service_requests})
+
+
+class ServiceRequestDetailView(View):
+    def get(self, request, pk):
+        service_request = get_object_or_404(ServiceRequest, pk=pk)
+        return render(request, 'computerserviceapp/details/service_request_detail.html', {'service_request': service_request})
+
+
+class ServiceRequestCreateView(View):
+    def get(self, request):
+        form = ServiceRequestForm()
+        return render(request, 'computerserviceapp/forms/service_request_form.html', {'form': form})
+
+    def post(self, request):
+        form = ServiceRequestForm(request.POST)
+        if form.is_valid():
+            service_request = form.save()
+            return redirect('service_request_detail', pk=service_request.pk)
+        return render(request, 'computerserviceapp/forms/service_request_form.html', {'form': form})
+
+
+class ServiceRequestUpdateView(View):
+    def get(self, request, pk):
+        service_request = get_object_or_404(ServiceRequest, pk=pk)
+        form = ServiceRequestForm(instance=service_request)
+        return render(request, 'computerserviceapp/forms/service_request_form.html', {'form': form})
+
+    def post(self, request, pk):
+        service_request = get_object_or_404(ServiceRequest, pk=pk)
+        form = ServiceRequestForm(request.POST, instance=service_request)
+        if form.is_valid():
+            service_request = form.save()
+            return redirect('service_request_detail', pk=service_request.pk)
+        return render(request, 'computerserviceapp/forms/service_request_form.html', {'form': form})
+
+
+class ServiceRequestDeleteView(View):
+    def get(self, request, pk):
+        service_request = get_object_or_404(ServiceRequest, pk=pk)
+        return render(request, 'computerserviceapp/delete/service_request_confirm_delete.html', {'service_request': service_request})
+
+    def post(self, request, pk):
+        service_request = get_object_or_404(ServiceRequest, pk=pk)
+        service_request.delete()
+        return redirect('service_request_list')
+
+"""def service_request_list(request):
     service_requests = ServiceRequest.objects.all()
     return render(request, 'computerserviceapp/lists/service_request_list.html', {'service_requests': service_requests})
 
@@ -50,7 +102,7 @@ def service_request_delete(request, pk):
         return redirect('service_request_list')
     return render(request, 'computerserviceapp/delete/service_request_confirm_delete.html', {'service_request': service_request})
 
-
+"""
 def invoice_list(request):
     invoices = Invoice.objects.all()
     return render(request, 'computerserviceapp/lists/invoice_list.html', {'invoices': invoices})
@@ -150,7 +202,7 @@ def service_technician_edit(request, pk):
         form = ServiceTechnicianForm(request.POST, instance=service_technician)
         if form.is_valid():
             service_technician = form.save()
-            return redirect('ServiceTechnician_detail', pk=service_technician.pk)
+            return redirect('service_technician_detail', pk=service_technician.pk)
     else:
         form = ServiceTechnicianForm(instance=service_technician)
     return render(request, 'computerserviceapp/forms/service_technician_form.html', {'form': form})
@@ -159,7 +211,7 @@ def service_technician_delete(request, pk):
     service_technician = get_object_or_404(ServiceTechnician, pk=pk)
     if request.method == 'POST':
         service_technician.delete()
-        return redirect('ServiceTechnician_list')
+        return redirect('service_technician_list')
     return render(request, 'computerserviceapp/delete/service_technician_confirm_delete.html', {'service_technician': service_technician})
 
 
