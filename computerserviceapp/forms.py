@@ -8,8 +8,8 @@ class ServiceRequestForm(forms.ModelForm):
         model = ServiceRequest
         fields = '__all__'
   
-        owned_by = forms.ModelChoiceField(queryset=ServiceTechnician.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-        requested_by = forms.ModelChoiceField(queryset=Customer.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+        #owned_by = forms.ModelChoiceField(queryset=ServiceTechnician.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+        #requested_by = forms.ModelChoiceField(queryset=Customer.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
        
 
 
