@@ -1,10 +1,11 @@
 from django.urls import path
 from . import views
-from .views import ServiceRequestListView, ServiceRequestDetailView, ServiceRequestCreateView, ServiceRequestUpdateView, ServiceRequestDeleteView
+from .views import IndexView,ServiceRequestListView, ServiceRequestDetailView, ServiceRequestCreateView, ServiceRequestUpdateView, ServiceRequestDeleteView
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    #path('', views.index, name='index'),
+    path('', IndexView.as_view() ,name='index'),
     path('service-request/', ServiceRequestListView.as_view(), name='service_request_list'),
     path('service-request/<int:pk>/', ServiceRequestDetailView.as_view(), name='service_request_detail'),
     path('service-request/new/', ServiceRequestCreateView.as_view(), name='service_request_create'),

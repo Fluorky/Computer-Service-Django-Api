@@ -4,9 +4,16 @@
 
 {% block content %}
     <h2>Customer List</h2>
+   
     <ul>
         {% for customer in customers %}
             <li><a href="{% url 'customer_detail' pk=customer.pk %}">{{ customer.name }}</a></li>
         {% endfor %}
     </ul>
+    <br><hr>
+    <h2>Create new customer</h2>
+    <p>
+    <a href="{% url 'customer_create' %}">Create new</a>
+    </p>
+    <br><hr>
 {% endblock %}

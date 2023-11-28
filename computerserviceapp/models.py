@@ -4,7 +4,6 @@ class CommonInfo(models.Model):
     name = models.CharField(max_length=100)
     price = models.PositiveIntegerField(default=0)
     
-
     class Meta:
         abstract = True
 
@@ -14,7 +13,6 @@ class Person(models.Model):
     email = models.EmailField()
     phone_number = models.CharField(max_length=11)
     
-
     class Meta:
         abstract = True
 
@@ -28,15 +26,25 @@ class ServiceRequest(CommonInfo):
         verbose_name = 'Service Request'
         verbose_name_plural = 'Service Requests'
 
+    def __str__(self):
+        return f"{self.name}"
+
 class Invoice(ServiceRequest):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.BooleanField(default=False)
-    service_request = models.ForeignKey('ServiceRequest', on_delete=models.SET_NULL, null=True, related_name='+')
-    part =  models.ForeignKey('Part', on_delete=models.SET_NULL, null=True)
+     ##TO DO##
+    #service_request = models.ForeignKey(ServiceRequest, on_delete=models.SET_NULL, null=True, related_name='invoices')
+    #or
+    #service_request = models.ForeignKey('ServiceRequest', on_delete=models.SET_NULL, null=True, related_name='+')
+    #part =  models.ForeignKey('Part', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = 'Invoice'
         verbose_name_plural = 'Invoices'
+
+
+    def __str__(self):
+        return f"{self.name}"
 
 class Part(CommonInfo):
     description = models.CharField(max_length=100)
@@ -46,14 +54,19 @@ class Part(CommonInfo):
         verbose_name = 'Part'
         verbose_name_plural = 'Parts'
 
+    def __str__(self):
+        return f"{self.name}"
+
 class ServiceTechnician(Person):
    
     specialization = models.CharField(max_length=100)
 
-
     class Meta:
         verbose_name = 'Service Technician'
         verbose_name_plural = 'Service Technicians'
+
+    def __str__(self):
+        return f"{self.name} {self.surname}"
 
 class Customer(Person):
     
@@ -67,3 +80,6 @@ class Customer(Person):
     class Meta:
         verbose_name = 'Customer'
         verbose_name_plural = 'Customers'
+
+    def __str__(self):
+        return f"{self.name} {self.surname}"

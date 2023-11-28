@@ -9,4 +9,11 @@
             <li><a href="{% url 'service_request_detail' pk=service_request.pk %}">{{ service_request.description }}</a></li>
         {% endfor %}
     </ul>
+    <br><hr>
+    <h2>Create new service request</h2>
+    <p>
+    <a href="{% url 'service_request_create' %}">Create new</a>
+    </p>
+    <br><hr>
+    
 {% endblock %}

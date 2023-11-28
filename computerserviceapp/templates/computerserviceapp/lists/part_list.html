@@ -9,4 +9,9 @@
             <li><a href="{% url 'part_detail' pk=part.pk %}">{{ part.description }}</a></li>
         {% endfor %}
     </ul>
+    <br><hr>
+    <h2>Add new part</h2>
+    <p>
+    <a href="{% url 'part_create' %}">Add new</a></p>
+    <br><hr>
 {% endblock %}

@@ -11,9 +11,13 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 # htmls 
 # css
 
-def index(request):
+#def index(request):
     #return HttpResponse("Welcome in Computer service")
-    return render(request, 'computerserviceapp/index.html') 
+
+class IndexView(View):
+    def get(self, request):
+        return render(request, 'computerserviceapp/index.html') 
+
 
 
 class ServiceRequestListView(View):
@@ -66,6 +70,12 @@ class ServiceRequestDeleteView(View):
         service_request.delete()
         return redirect('service_request_list')
 
+"""class ServiceRequestDeleteView(DeleteView):
+    model = ServiceRequest
+    template_name = 'computerserviceapp/delete/service_request_confirm_delete.html'
+    success_url = reverse_lazy('service_request_list')
+"""
+
 """def service_request_list(request):
     service_requests = ServiceRequest.objects.all()
     return render(request, 'computerserviceapp/lists/service_request_list.html', {'service_requests': service_requests})
@@ -94,15 +104,15 @@ def service_request_edit(request, pk):
     else:
         form = ServiceRequestForm(instance=service_request)
     return render(request, 'computerserviceapp/forms/service_request_form.html', {'form': form})
-
-def service_request_delete(request, pk):
+"""
+"""def service_request_delete(request, pk):
     service_request = get_object_or_404(ServiceRequest, pk=pk)
     if request.method == 'POST':
         service_request.delete()
         return redirect('service_request_list')
-    return render(request, 'computerserviceapp/delete/service_request_confirm_delete.html', {'service_request': service_request})
+    return render(request, 'computerserviceapp/delete/service_request_confirm_delete.html', {'service_request': service_request})"""
 
-"""
+
 def invoice_list(request):
     invoices = Invoice.objects.all()
     return render(request, 'computerserviceapp/lists/invoice_list.html', {'invoices': invoices})

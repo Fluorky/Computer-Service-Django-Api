@@ -38,7 +38,7 @@ media
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
-
+.vscode
 # File-based project format
 *.iws
 

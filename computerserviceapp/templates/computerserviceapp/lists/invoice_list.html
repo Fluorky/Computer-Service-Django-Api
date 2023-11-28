@@ -9,4 +9,10 @@
             <li><a href="{% url 'invoice_detail' pk=invoice.pk %}">Invoice {{ invoice.pk }}</a></li>
         {% endfor %}
     </ul>
+    <br><hr>
+    <h2>Create new invoice</h2>
+    <p>
+    <a href="{% url 'invoice_create' %}">Create new</a>
+    </p>
+    <br><hr>
 {% endblock %}

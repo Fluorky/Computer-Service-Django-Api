@@ -6,6 +6,10 @@
     <h2>Invoice {{ invoice.pk }} Details</h2>
     <p>Total Amount: {{ invoice.total_amount }}</p>
     <p>Payment Status: {% if invoice.payment_status %}Paid{% else %}Unpaid{% endif %}</p>
+    <p>Owned by {{ invoice.owned_by }}</p>
+    <p>Request by: {{ invoice.requested_by }}</p>
+    <!--<p>Service request: {{ invoice.service_request }}</p>
+    <p>Service request: {{ invoice.part }}</p>-->
     <!-- Add more details as needed -->
     <a href="{% url 'invoice_edit' pk=invoice.pk %}">Edit</a>
     <a href="{% url 'invoice_delete' pk=invoice.pk %}">Delete</a>
