@@ -9,10 +9,7 @@ media
 # Backup files # 
 *.bak 
 -- SQLite_Querys.sql
-!/migrations
-!/migrations/__init__.py
 migrations/
-computerserviceapp/migrations
 # If you are using PyCharm # 
 # User-specific stuff
 .idea/**/workspace.xml

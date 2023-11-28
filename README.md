@@ -25,3 +25,5 @@ python manage.py migrate
 python manage.py runserver 0.0.0.0:8000 
 7. Open this address yourIPAdress:8000 in browser
 for example: 127.0.0.1:8000
+8. To run unit tests please use this command:
+python manage.py test computerserviceapp
