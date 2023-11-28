@@ -1,5 +1,4 @@
 # computerserviceapp/tests.py
-# computerserviceapp/tests.py
 
 from django.test import TestCase
 from django.urls import reverse
@@ -23,6 +22,15 @@ class ModelTests(TestCase):
         self.assertEqual(str(self.invoice), 'Invoice')
 
 class ViewTests(TestCase):
+
+    def setUp(self):
+        # Create test data for views
+        self.customer = Customer.objects.create(name='John', surname='Doe', email='john@example.com', phone_number='1234567890')
+        self.technician = ServiceTechnician.objects.create(name='Tech', surname='Guy', email='tech@example.com', phone_number='9876543210', specialization='Computer Repair')
+        self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
+        self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
+        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00)
+
     def test_index_view(self):
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
@@ -33,10 +41,28 @@ class ViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'computerserviceapp/lists/service_request_list.html')
 
+    def test_service_request_detail_view(self):
+        response = self.client.get(reverse('service_request_detail', kwargs={'pk': self.service_request.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'computerserviceapp/details/service_request_detail.html')
+
+    def test_service_request_create_view(self):
+        response = self.client.get(reverse('service_request_create'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'computerserviceapp/forms/service_request_form.html')
+
+    def test_service_request_update_view(self):
+        response = self.client.get(reverse('service_request_edit', kwargs={'pk': self.service_request.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'computerserviceapp/forms/service_request_form.html')
+
+    def test_service_request_delete_view(self):
+        response = self.client.get(reverse('service_request_delete', kwargs={'pk': self.service_request.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'computerserviceapp/delete/service_request_confirm_delete.html')
+
     ##TO DO##
-    # Add similar tests for other forms
-
-
+    # Add similar tests for other views
 
 
 class FormTests(TestCase):
@@ -56,17 +82,17 @@ class FormTests(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_service_request_form_valid(self):
-        form_data = {'name': 'Service', 'price':10,'description': 'Fix my computer', 'requested_by': 1, 'owned_by': 1}
+        form_data = {'name': 'Service', 'price': 10,'description': 'Fix my computer', 'requested_by': 1, 'owned_by': 1}
         form = ServiceRequestForm(data=form_data)
         self.assertTrue(form.is_valid())
 
     def test_invoice_form_valid(self):
-        form_data = {'name': 'Invoice 1','price':21, 'description': 'Computer repair services', 'requested_by': 1, 'owned_by': 1, 'total_amount': 100.00, "payment_status":False}
+        form_data = {'name': 'Invoice 1','price': 21, 'description': 'Computer repair services', 'requested_by': 1, 'owned_by': 1, 'total_amount': 100.00, "payment_status":False}
         form = InvoiceForm(data=form_data)
         self.assertTrue(form.is_valid())
 
     def test_part_form_valid(self):
-        form_data = {'name': 'Hard Drive','price':100, 'description': '1TB HDD', 'quantity_in_stock': 10}
+        form_data = {'name': 'Hard Drive','price': 100, 'description': '1TB HDD', 'quantity_in_stock': 10}
         form = PartForm(data=form_data)
         self.assertTrue(form.is_valid())
 
