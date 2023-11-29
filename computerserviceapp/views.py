@@ -6,6 +6,12 @@ from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer
 from .forms import ServiceRequestForm, InvoiceForm , PartForm, ServiceTechnicianForm, CustomerForm
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from rest_framework import generics
+from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer
+from .serializers import (
+    ServiceRequestSerializer, InvoiceSerializer, PartSerializer,
+    ServiceTechnicianSerializer, CustomerSerializer
+)
 
 ## TO DO ##
 # htmls 
@@ -13,6 +19,98 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 #def index(request):
     #return HttpResponse("Welcome in Computer service")
+
+
+# computerserviceapp/views.py
+
+
+
+
+class ServiceRequestListAPIView(generics.ListCreateAPIView):
+    queryset = ServiceRequest.objects.all()
+    serializer_class = ServiceRequestSerializer
+
+class ServiceRequestDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ServiceRequest.objects.all()
+    serializer_class = ServiceRequestSerializer
+
+class InvoiceListAPIView(generics.ListCreateAPIView):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+
+class InvoiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+
+class PartListAPIView(generics.ListCreateAPIView):
+    queryset = Part.objects.all()
+    serializer_class = PartSerializer
+
+class PartDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Part.objects.all()
+    serializer_class = PartSerializer
+
+class ServiceTechnicianListAPIView(generics.ListCreateAPIView):
+    queryset = ServiceTechnician.objects.all()
+    serializer_class = ServiceTechnicianSerializer
+
+class ServiceTechnicianDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ServiceTechnician.objects.all()
+    serializer_class = ServiceTechnicianSerializer
+
+class CustomerListAPIView(generics.ListCreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+class CustomerDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+class ServiceRequestListCreateAPIView(generics.ListCreateAPIView):
+    queryset = ServiceRequest.objects.all()
+    serializer_class = ServiceRequestSerializer
+
+class ServiceRequestDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ServiceRequest.objects.all()
+    serializer_class = ServiceRequestSerializer
+
+class InvoiceListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+
+class InvoiceDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+
+class PartListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Part.objects.all()
+    serializer_class = PartSerializer
+
+class PartDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Part.objects.all()
+    serializer_class = PartSerializer
+
+class ServiceTechnicianListCreateAPIView(generics.ListCreateAPIView):
+    queryset = ServiceTechnician.objects.all()
+    serializer_class = ServiceTechnicianSerializer
+
+class ServiceTechnicianDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ServiceTechnician.objects.all()
+    serializer_class = ServiceTechnicianSerializer
+
+class CustomerListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+class CustomerDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+
+
+"""
+
+
 
 class IndexView(View):
     def get(self, request):
@@ -69,49 +167,6 @@ class ServiceRequestDeleteView(View):
         service_request = get_object_or_404(ServiceRequest, pk=pk)
         service_request.delete()
         return redirect('service_request_list')
-
-"""class ServiceRequestDeleteView(DeleteView):
-    model = ServiceRequest
-    template_name = 'computerserviceapp/delete/service_request_confirm_delete.html'
-    success_url = reverse_lazy('service_request_list')
-"""
-
-"""def service_request_list(request):
-    service_requests = ServiceRequest.objects.all()
-    return render(request, 'computerserviceapp/lists/service_request_list.html', {'service_requests': service_requests})
-
-def service_request_detail(request, pk):
-    service_request = get_object_or_404(ServiceRequest, pk=pk)
-    return render(request, 'computerserviceapp/details/service_request_detail.html', {'service_request': service_request})
-
-def service_request_create(request):
-    if request.method == 'POST':
-        form = ServiceRequestForm(request.POST)
-        if form.is_valid():
-            service_request = form.save()
-            return redirect('service_request_detail', pk=service_request.pk)
-    else:
-        form = ServiceRequestForm()
-    return render(request, 'computerserviceapp/forms/service_request_form.html', {'form': form})
-
-def service_request_edit(request, pk):
-    service_request = get_object_or_404(ServiceRequest, pk=pk)
-    if request.method == 'POST':
-        form = ServiceRequestForm(request.POST, instance=service_request)
-        if form.is_valid():
-            service_request = form.save()
-            return redirect('service_request_detail', pk=service_request.pk)
-    else:
-        form = ServiceRequestForm(instance=service_request)
-    return render(request, 'computerserviceapp/forms/service_request_form.html', {'form': form})
-"""
-"""def service_request_delete(request, pk):
-    service_request = get_object_or_404(ServiceRequest, pk=pk)
-    if request.method == 'POST':
-        service_request.delete()
-        return redirect('service_request_list')
-    return render(request, 'computerserviceapp/delete/service_request_confirm_delete.html', {'service_request': service_request})"""
-
 
 def invoice_list(request):
     invoices = Invoice.objects.all()
@@ -261,3 +316,4 @@ def customer_delete(request, pk):
         return redirect('customer_list')
     return render(request, 'computerserviceapp/delete/customer_confirm_delete.html', {'customer': customer})
 ##TO DO##
+"""
