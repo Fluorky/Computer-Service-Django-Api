@@ -245,3 +245,64 @@ class ServiceTechnicianTests(TestCase):
         response = self.client.delete(reverse('service_technician_detail_update_delete_api', args=[self.technician.pk]))
         self.assertEqual(response.status_code, 204)  # Assuming a successful deletion redirects to another page
         self.assertFalse(ServiceTechnician.objects.filter(pk=self.technician.pk).exists())
+
+
+
+class CustomerTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.customer = Customer.objects.create(name='John', surname='Doe', email='john@example.com', phone_number='1234567890')
+        self.technician = ServiceTechnician.objects.create(name='TechIT', surname='Guy', email='tech@example.com', phone_number='9876543210', specialization='Computer Repair')
+        self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
+        self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
+        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00)
+
+    def test_customer_list_view(self):
+        response = self.client.get(reverse('customer_list_api'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.customer.name)
+        self.assertContains(response, self.customer.surname)
+        self.assertContains(response, self.customer.email)
+        self.assertContains(response, self.customer.phone_number)
+
+        
+
+    def test_customer_detail_view(self):
+        response = self.client.get(reverse('customer_detail_api', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.customer.name)
+        self.assertContains(response, self.customer.surname)
+        self.assertContains(response, self.customer.email)
+        self.assertContains(response, self.customer.phone_number)
+        
+       
+
+    def test_customer_create_view(self):
+        response = self.client.post(reverse('customer_list_create_api'), {'name':'Rajesh', 'surname':'Rax', 'email':'rajeshrax@example.com', 'phone_number':'9874343210', 'specialization':'IT support'})
+        self.assertEqual(response.status_code, 201)  # Assuming a successful creation redirects to another page
+       
+
+    def test_customer_update_view(self):
+        response = self.client.get(reverse('customer_detail_update_delete_api', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.put(
+            reverse('customer_detail_update_delete_api', args=[self.customer.pk]),
+            {'name':'Pajet', 'surname':'Hrejt', 'email':'pajethrejt@example.com', 'phone_number':'9874343210', 'specialization':'IT programmer'},
+            content_type='application/json'
+        )
+
+        self.assertEqual(response.status_code, 200)  # Assuming a successful update redirects to another page
+
+        self.customer.refresh_from_db()
+        self.assertEqual(self.customer.name, 'Pajet')
+        self.assertEqual(self.customer.surname, 'Hrejt')
+        self.assertEqual(self.customer.email, 'pajethrejt@example.com')
+        self.assertEqual(self.customer.phone_number, '9874343210')
+
+        
+    def test_customer_delete_view(self):
+        response = self.client.delete(reverse('customer_detail_update_delete_api', args=[self.customer.pk]))
+        self.assertEqual(response.status_code, 204)  # Assuming a successful deletion redirects to another page
+        self.assertFalse(Customer.objects.filter(pk=self.customer.pk).exists())
+
