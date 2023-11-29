@@ -28,4 +28,4 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = '__all__'
 
-# Create similar serializers for other models
+

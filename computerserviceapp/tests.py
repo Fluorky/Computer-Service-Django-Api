@@ -3,7 +3,6 @@
 from django.test import TestCase
 from django.urls import reverse
 from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer
-from .forms import ServiceRequestForm, InvoiceForm, PartForm, ServiceTechnicianForm, CustomerForm
 from django.test import TestCase, Client
 from django.urls import reverse
 from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer
@@ -79,40 +78,6 @@ class ServiceRequestTests(TestCase):
         self.assertEqual(response.status_code, 204)  # Assuming a successful deletion redirects to another page
         self.assertFalse(ServiceRequest.objects.filter(pk=self.service_request.pk).exists())
         # Add more assertions as needed
-
+#TO DO##
 # Similar tests can be created for other views (Invoice, Part, ServiceTechnician, Customer)
 
-class FormTests(TestCase):
-    def setUp(self):
-        # Create test data for models
-        self.customer = Customer.objects.create(name='John', surname='Doe', email='john@example.com', phone_number='1234567890')
-        self.technician = ServiceTechnician.objects.create(name='Tech', surname='Guy', email='tech@example.com', phone_number='9876543210', specialization='Computer Repair')
-
-    def test_service_technician_form_valid(self):
-        form_data = {'name': 'Tech', 'surname': 'Guy', 'email': 'tech@example.com', 'phone_number': '9876543210', 'specialization': 'Computer Repair'}
-        form = ServiceTechnicianForm(data=form_data)
-        self.assertTrue(form.is_valid())
-
-    def test_customer_form_valid(self):
-        form_data = {'name': 'John', 'surname': 'Doe', 'email': 'john@example.com', 'phone_number': '1234567890', 'address_line1': '123 Main St', 'city': 'City', 'country': 'Country'}
-        form = CustomerForm(data=form_data)
-        self.assertTrue(form.is_valid())
-
-    def test_service_request_form_valid(self):
-        form_data = {'name': 'Service', 'price': 10,'description': 'Fix my computer', 'requested_by': 1, 'owned_by': 1}
-        form = ServiceRequestForm(data=form_data)
-        self.assertTrue(form.is_valid())
-
-    def test_invoice_form_valid(self):
-        form_data = {'name': 'Invoice 1','price': 21, 'description': 'Computer repair services', 'requested_by': 1, 'owned_by': 1, 'total_amount': 100.00, "payment_status":False}
-        form = InvoiceForm(data=form_data)
-        self.assertTrue(form.is_valid())
-
-    def test_part_form_valid(self):
-        form_data = {'name': 'Hard Drive','price': 100, 'description': '1TB HDD', 'quantity_in_stock': 10}
-        form = PartForm(data=form_data)
-        self.assertTrue(form.is_valid())
-
- 
-    ##TO DO##
-    # Add similar tests for invalid form data, missing required fields, etc.

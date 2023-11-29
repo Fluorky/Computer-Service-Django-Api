@@ -1,7 +1,4 @@
 from django.urls import path
-#from . import views
-#from .views import IndexView,ServiceRequestListView, ServiceRequestDetailView, ServiceRequestCreateView, ServiceRequestUpdateView, ServiceRequestDeleteView
-from django.views.generic.base import RedirectView
 from .views import (
     ServiceRequestListAPIView, ServiceRequestDetailAPIView,
     InvoiceListAPIView, InvoiceDetailAPIView,
