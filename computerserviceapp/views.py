@@ -7,10 +7,6 @@ from .serializers import (
 )
 
 
-#def index(request):
-    #return HttpResponse("Welcome in Computer service")
-
-
 class ServiceRequestListAPIView(generics.ListCreateAPIView):
     queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
