@@ -13,10 +13,12 @@ The project is part of object-oriented design classes and the project is under d
 
 ## Windows
 py -3 -m venv venv
+
 .\\venv\\Scripts\\activate
 
 ## macOS or Linux
 python3 -m venv venv
+
 source ./venv/bin/activate
 
 4.  Use this command to install requirements packages
