@@ -126,7 +126,7 @@ class InvoiceTests(TestCase):
 
         response = self.client.put(
             reverse('invoice_detail_update_delete_api', args=[self.invoice.pk]),
-            {'name': 'Invoice 123423', 'description': 'Fix laptop drive', 'requested_by' :1 ,'owned_by':1,'total_amount':200.00},
+            {'name': 'Invoice 123423', 'description': 'Fix laptop drive', 'requested_by' :1 ,'owned_by':1,'total_amount':200.00,},
             content_type='application/json'
         )
 
@@ -139,6 +139,7 @@ class InvoiceTests(TestCase):
         self.assertEqual(self.invoice.description, 'Fix laptop drive')
         self.assertEqual(self.invoice.requested_by, self.customer)
         self.assertEqual(self.invoice.owned_by, self.technician)
+
         
     def test_invoice_delete_view(self):
         response = self.client.delete(reverse('invoice_detail_update_delete_api', args=[self.invoice.pk]))
