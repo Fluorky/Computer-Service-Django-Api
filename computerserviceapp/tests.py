@@ -14,7 +14,7 @@ class ModelTests(TestCase):
         self.technician = ServiceTechnician.objects.create(name='Tech', surname='Guy', email='tech@example.com', phone_number='9876543210', specialization='Computer Repair')
         self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
         self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
-        self.invoice = Invoice.objects.create(name='Invoice 21321', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00)
+        self.invoice = Invoice.objects.create(name='Invoice 21321', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00, part=self.part, service_request=self.service_request)
 
     def test_models(self):
         self.assertEqual(str(self.customer), 'John Doe')
@@ -31,7 +31,7 @@ class ServiceRequestTests(TestCase):
         self.technician = ServiceTechnician.objects.create(name='TechIT', surname='Guy', email='tech@example.com', phone_number='9876543210', specialization='Computer Repair')
         self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
         self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
-        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00)
+        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00, part=self.part, service_request=self.service_request)
 
     def test_service_request_list_view(self):
         response = self.client.get(reverse('service_request_list_api'))
@@ -93,7 +93,7 @@ class InvoiceTests(TestCase):
         self.technician = ServiceTechnician.objects.create(name='TechIT', surname='Guy', email='tech@example.com', phone_number='9876543210', specialization='Computer Repair')
         self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
         self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
-        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00)
+        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00, part=self.part, service_request=self.service_request)
     
     def test_invoice_list_view(self):
         response = self.client.get(reverse('invoice_list_api'))
@@ -116,7 +116,7 @@ class InvoiceTests(TestCase):
 
 
     def test_invoice_create_view(self):
-        response = self.client.post(reverse('invoice_list_create_api'), {'name': 'Invoice 3241', 'description': 'Fix screen errors', 'requested_by' :1 ,'owned_by':1,'total_amount':100.00})
+        response = self.client.post(reverse('invoice_list_create_api'), {'name': 'Invoice 3241', 'description': 'Fix screen errors', 'requested_by' :1 ,'owned_by':1,'total_amount':100.00, 'part':1, 'service_request':1})
         self.assertEqual(response.status_code, 201)  # Assuming a successful creation redirects to another page
        
 
@@ -126,7 +126,7 @@ class InvoiceTests(TestCase):
 
         response = self.client.put(
             reverse('invoice_detail_update_delete_api', args=[self.invoice.pk]),
-            {'name': 'Invoice 123423', 'description': 'Fix laptop drive', 'requested_by' :1 ,'owned_by':1,'total_amount':200.00,},
+            {'name': 'Invoice 123423', 'description': 'Fix laptop drive', 'requested_by' :1 ,'owned_by':1,'total_amount':200.00,'part':1, 'service_request':1},
             content_type='application/json'
         )
 
@@ -139,6 +139,8 @@ class InvoiceTests(TestCase):
         self.assertEqual(self.invoice.description, 'Fix laptop drive')
         self.assertEqual(self.invoice.requested_by, self.customer)
         self.assertEqual(self.invoice.owned_by, self.technician)
+        self.assertEqual(self.invoice.part, self.part)
+        self.assertEqual(self.invoice.service_request, self.service_request)
 
         
     def test_invoice_delete_view(self):
@@ -191,7 +193,7 @@ class ServiceTechnicianTests(TestCase):
         self.technician = ServiceTechnician.objects.create(name='TechIT', surname='Guy', email='tech@example.com', phone_number='9876543210', specialization='Computer Repair')
         self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
         self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
-        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00)
+        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00, part=self.part, service_request=self.service_request)
 
     def test_service_technician_list_view(self):
         response = self.client.get(reverse('service_technician_list_api'))
@@ -256,7 +258,7 @@ class CustomerTests(TestCase):
         self.technician = ServiceTechnician.objects.create(name='TechIT', surname='Guy', email='tech@example.com', phone_number='9876543210', specialization='Computer Repair')
         self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
         self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
-        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00)
+        self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00, part=self.part, service_request=self.service_request)
 
     def test_customer_list_view(self):
         response = self.client.get(reverse('customer_list_api'))

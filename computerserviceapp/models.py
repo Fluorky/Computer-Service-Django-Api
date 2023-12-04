@@ -35,7 +35,7 @@ class Invoice(ServiceRequest):
      ##TO DO##
     #service_request = models.ForeignKey(ServiceRequest, on_delete=models.SET_NULL, null=True, related_name='invoices')
     #or
-    #service_request = models.ForeignKey('ServiceRequest', on_delete=models.SET_NULL, null=True, related_name='+')
+    service_request = models.ForeignKey('ServiceRequest', on_delete=models.SET_NULL, null=True, related_name='+')
     part =  models.ForeignKey('Part', on_delete=models.SET_NULL, null=True)
 
     class Meta:
