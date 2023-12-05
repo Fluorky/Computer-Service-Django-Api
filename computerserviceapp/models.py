@@ -16,6 +16,8 @@ class Person(models.Model):
     class Meta:
         abstract = True
 
+
+
 class ServiceRequest(CommonInfo):
     description = models.TextField()
     requested_by = models.ForeignKey('Customer', on_delete=models.CASCADE) #or .SET_NULL, null=True)

@@ -39,8 +39,7 @@ class ServiceRequestTests(TestCase):
         self.assertContains(response, self.service_request.name)
         self.assertContains(response, self.service_request.price)
         self.assertContains(response, self.service_request.description)
-        #self.assertContains(response, self.service_request.requested_by)
-        #self.assertContains(response, self.service_request.owned_by)
+      
         
 
     def test_service_request_detail_view(self):
@@ -49,8 +48,7 @@ class ServiceRequestTests(TestCase):
         self.assertContains(response, self.service_request.name)
         self.assertContains(response, self.service_request.price)
         self.assertContains(response, self.service_request.description)
-        #self.assertContains(response, self.service_request.requested_by)
-        #self.assertContains(response, self.service_request.owned_by)
+     
   
        
 
@@ -83,9 +81,6 @@ class ServiceRequestTests(TestCase):
         self.assertEqual(response.status_code, 204)  # Assuming a successful deletion redirects to another page
         self.assertFalse(ServiceRequest.objects.filter(pk=self.service_request.pk).exists())
         
-#TO DO##
-# Similar tests can be created for other views (Invoice, Part, ServiceTechnician, Customer)
-
 class InvoiceTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -102,8 +97,6 @@ class InvoiceTests(TestCase):
         self.assertContains(response, self.invoice.price)
         self.assertContains(response, self.invoice.description)
         self.assertContains(response, self.invoice.total_amount)
-        # self.assertContains(response, self.invoice.requested_by)
-        #self.assertContains(response, self.invoice.owned_by)
       
 
     def test_invoice_detail_view(self):
@@ -134,7 +127,6 @@ class InvoiceTests(TestCase):
 
         self.invoice.refresh_from_db()
         self.assertEqual(self.invoice.name, 'Invoice 123423')
-        #self.assertEqual(self.invoice.price, 100)
         self.assertEqual(self.invoice.total_amount, 200.00)
         self.assertEqual(self.invoice.description, 'Fix laptop drive')
         self.assertEqual(self.invoice.requested_by, self.customer)
@@ -203,8 +195,6 @@ class ServiceTechnicianTests(TestCase):
         self.assertContains(response, self.technician.email)
         self.assertContains(response, self.technician.phone_number)
         self.assertContains(response, self.technician.specialization)
-        #self.assertContains(response, self.service_technician.requested_by)
-        #self.assertContains(response, self.service_technician.owned_by)
         
 
     def test_service_technician_detail_view(self):
@@ -215,8 +205,6 @@ class ServiceTechnicianTests(TestCase):
         self.assertContains(response, self.technician.email)
         self.assertContains(response, self.technician.phone_number)
         self.assertContains(response, self.technician.specialization)
-        #self.assertContains(response, self.service_technician.requested_by)
-        #self.assertContains(response, self.service_technician.owned_by)
   
        
 
