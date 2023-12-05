@@ -20,7 +20,7 @@ class Person(models.Model):
 
 class ServiceRequest(CommonInfo):
     description = models.TextField()
-    requested_by = models.ForeignKey('Customer', on_delete=models.CASCADE) #or .SET_NULL, null=True)
+    requested_by = models.ForeignKey('Customer', on_delete=models.CASCADE) 
     owned_by = models.ForeignKey('ServiceTechnician', on_delete=models.CASCADE)
     requested_at = models.DateTimeField(auto_now_add=True)
 
@@ -34,10 +34,7 @@ class ServiceRequest(CommonInfo):
 class Invoice(ServiceRequest):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.BooleanField(default=False)
-     ##TO DO##
-    #service_request = models.ForeignKey(ServiceRequest, on_delete=models.SET_NULL, null=True, related_name='invoices')
-    #or
-    service_request = models.ForeignKey('ServiceRequest', on_delete=models.SET_NULL, null=True, related_name='+')
+    service_request = models.ForeignKey(ServiceRequest, on_delete=models.SET_NULL, null=True, related_name='invoices')
     part =  models.ForeignKey('Part', on_delete=models.SET_NULL, null=True)
 
     class Meta:
