@@ -23,6 +23,11 @@ class ModelTests(TestCase):
         self.assertEqual(str(self.part), 'Hard Drive')
         self.assertEqual(str(self.invoice), 'Invoice 21321')
 
+    
+
+ 
+
+  
 
 class ServiceRequestTests(TestCase):
     def setUp(self):
@@ -39,6 +44,20 @@ class ServiceRequestTests(TestCase):
         self.assertContains(response, self.service_request.name)
         self.assertContains(response, self.service_request.price)
         self.assertContains(response, self.service_request.description)
+
+    
+
+    def test_models_view(self):
+
+        service_request = ServiceRequest.objects.get(pk=1)   
+        self.assertEqual(service_request.state,"new")
+        service_request.submit_request()  # Move to 'open' state
+        self.assertEqual(service_request.state,"open")
+        service_request.start_work()  # Move to 'pending' state
+        self.assertEqual(service_request.state,"pending")
+        service_request.mark_in_progress()  # Move to 'work_in_progress' state
+        self.assertEqual(service_request.state,"work_in_progress")
+
       
         
 
@@ -50,7 +69,7 @@ class ServiceRequestTests(TestCase):
         self.assertContains(response, self.service_request.description)
      
   
-       
+
 
     def test_service_request_create_view(self):
         response = self.client.post(reverse('service_request_list_create_api'), {'name': 'New service Request', 'description': 'New Description', 'requested_by' :1 ,'owned_by':1})

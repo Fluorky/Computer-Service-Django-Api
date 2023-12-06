@@ -1,4 +1,5 @@
 from django.db import models
+from django_fsm import FSMField, transition
 
 class CommonInfo(models.Model):
     name = models.CharField(max_length=100)
@@ -23,6 +24,8 @@ class ServiceRequest(CommonInfo):
     requested_by = models.ForeignKey('Customer', on_delete=models.CASCADE) 
     owned_by = models.ForeignKey('ServiceTechnician', on_delete=models.CASCADE)
     requested_at = models.DateTimeField(auto_now_add=True)
+       # Define FSMField to manage the state
+    state = FSMField(default='new')#,protected=True)
 
     class Meta:
         verbose_name = 'Service Request'
@@ -30,6 +33,31 @@ class ServiceRequest(CommonInfo):
 
     def __str__(self):
         return f"{self.name}"
+    
+     # Define state transitions
+    @transition(field=state, source='new', target='open')
+    def submit_request(self):
+        pass
+
+    @transition(field=state, source='open', target='pending')
+    def start_work(self):
+        pass
+
+    @transition(field=state, source=['new', 'pending'], target='work_in_progress')
+    def mark_in_progress(self):
+        pass
+
+    @transition(field=state, source=['work_in_progress', 'pending'], target='closed_complete')
+    def mark_complete(self):
+        pass
+
+    @transition(field=state, source=['work_in_progress', 'pending'], target='closed_incomplete')
+    def mark_incomplete(self):
+        pass
+
+    @transition(field=state, source=['work_in_progress', 'pending'], target='closed_skipped')
+    def mark_skipped(self):
+        pass
 
 class Invoice(ServiceRequest):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
