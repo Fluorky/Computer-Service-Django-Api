@@ -1,45 +1,47 @@
 @startuml
-
 class CommonInfo {
-  +name: string
-  +price: int
+  + name: String
+  + price: Integer 
 }
-
 class Person {
-  +name: string
+  + name: String
+  + surname: String
+  + email: Email
+  + phone_number: String
 }
-
 class ServiceRequest {
-  +description: string
-  +requested_by: Customer
-  +requested_at: datetime
+  + description: String
+  + requested_by: Customer
+  + owned_by: ServiceTechnician
+  + requested_at: DateTime
 }
-
 class Invoice {
-  +total_amount: decimal
-  +payment_status: boolean
+  + total_amount: Decimal
+  + payment_status: Boolean 
+  + service_request: ServiceRequest
+  + part: Part
 }
-
 class Part {
-  +description: string
-  +quantity_in_stock: int
+  + description: String
+  + quantity_in_stock: Integer 
 }
-
 class ServiceTechnician {
-  +surname: string
-  +specialization: string
+  + specialization: String
 }
-
 class Customer {
-  +email: string
-  +phone_number: string
+  + address_line1: String
+  + address_line2: String
+  + postal_code: String
+  + city: String
+  + state: String
+  + country: String
 }
-
 CommonInfo --|> ServiceRequest
-CommonInfo --|> Part
+Person --|> ServiceRequest
+ServiceRequest --|> Invoice
+ServiceRequest *-- Customer : requested_by
+ServiceRequest *-- ServiceTechnician : owned_by
+Invoice *-- Part
 Person --|> ServiceTechnician
 Person --|> Customer
-ServiceRequest --|> Invoice
-ServiceRequest --|> Customer
-
 @enduml

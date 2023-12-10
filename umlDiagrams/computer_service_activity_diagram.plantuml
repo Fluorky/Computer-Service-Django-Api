@@ -1,11 +1,10 @@
 @startuml
 
-
 (*) --> Create_Service_Request
-Create_Service_Request --> Review_Service_Request : Review and Approve
-Review_Service_Request --> Assign_Technician : Assign to Technician
-Assign_Technician --> Perform_Service : Perform Service
-Perform_Service --> Generate_Invoice : Complete Service
-Generate_Invoice --> (*)
+--> Review_Service_Request : Review and Approve
+--> Assign_Technician : Assign to Technician
+--> Perform_Service : Perform Service
+--> Generate_Invoice : Complete Service
+--> (*)
 
 @enduml

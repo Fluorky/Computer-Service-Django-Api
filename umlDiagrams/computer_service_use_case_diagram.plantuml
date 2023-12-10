@@ -1,0 +1,24 @@
+@startuml
+
+actor Customer
+actor ServiceTechnician
+actor Admin
+
+usecase "Create Service Request" as CreateServiceRequest
+usecase "Assign Technician" as AssignTechnician
+usecase "Generate Invoice" as GenerateInvoice
+
+
+Customer --> (CreateServiceRequest)
+Admin --> (AssignTechnician)
+Admin --> (GenerateInvoice)
+Admin --> (View Invoice)
+ServiceTechnician --> (View Invoice)
+Customer --> (View Invoice)
+
+Customer --> (View Service Request)
+ServiceTechnician --> (View Service Request)
+ServiceTechnician --> (Update Service Request)
+ServiceTechnician --> (Delete Service Request)
+
+@enduml
