@@ -76,8 +76,6 @@ class Invoice(ServiceRequest):
     service_requests = models.ManyToManyField(ServiceRequest, related_name='invoices')
     parts = models.ManyToManyField(Part, related_name='invoices')
 
-    # Other fields...
-
     class Meta:
         verbose_name = 'Invoice'
         verbose_name_plural = 'Invoices'
@@ -85,7 +83,6 @@ class Invoice(ServiceRequest):
     def calculate_total_amount(self):
         # Calculate total amount including tax
         total_amount_before_tax = self.total_amount
-        # ... your tax calculation logic ...
         self.total_amount = total_amount_before_tax
 
     def save(self, *args, **kwargs):
