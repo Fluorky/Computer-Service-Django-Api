@@ -4,6 +4,7 @@
 --> Review_Service_Request : Review and Approve
 --> Assign_Technician : Assign to Technician
 --> Perform_Service : Perform Service
+--> Payment : Paying for parts and service requests
 --> Generate_Invoice : Complete Service
 --> (*)
 

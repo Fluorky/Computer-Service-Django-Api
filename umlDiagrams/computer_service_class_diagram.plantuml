@@ -41,10 +41,10 @@ class Customer {
 }
 CommonInfo --|> ServiceRequest
 Person --|> ServiceRequest
-ServiceRequest --|> Invoice
+ServiceRequest *--> Invoice
 ServiceRequest *-- Customer : requested_by
 ServiceRequest *-- ServiceTechnician : owned_by
-Invoice *-- Part
+Invoice <--* Part
 Person --|> ServiceTechnician
 Person --|> Customer
 @enduml
