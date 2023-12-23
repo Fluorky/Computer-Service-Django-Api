@@ -59,20 +59,6 @@ class ServiceRequest(CommonInfo):
     def mark_skipped(self):
         pass
 
-class Invoice(ServiceRequest):
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_status = models.BooleanField(default=False)
-    service_request = models.ForeignKey(ServiceRequest, on_delete=models.SET_NULL, null=True, related_name='invoices')
-    part =  models.ForeignKey('Part', on_delete=models.SET_NULL, null=True)
-
-    class Meta:
-        verbose_name = 'Invoice'
-        verbose_name_plural = 'Invoices'
-
-
-    def __str__(self):
-        return f"{self.name}"
-
 class Part(CommonInfo):
     description = models.CharField(max_length=100)
     quantity_in_stock = models.PositiveIntegerField(default=0)
@@ -83,6 +69,34 @@ class Part(CommonInfo):
 
     def __str__(self):
         return f"{self.name}"
+
+class Invoice(ServiceRequest):
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_status = models.BooleanField(default=False)
+    service_requests = models.ManyToManyField(ServiceRequest, related_name='invoices')
+    parts = models.ManyToManyField(Part, related_name='invoices')
+
+    # Other fields...
+
+    class Meta:
+        verbose_name = 'Invoice'
+        verbose_name_plural = 'Invoices'
+
+    def calculate_total_amount(self):
+        # Calculate total amount including tax
+        total_amount_before_tax = self.total_amount
+        # ... your tax calculation logic ...
+        self.total_amount = total_amount_before_tax
+
+    def save(self, *args, **kwargs):
+        # Calculate tax before saving the invoice
+        self.calculate_total_amount()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name}"
+    
+
 
 class ServiceTechnician(Person):
    

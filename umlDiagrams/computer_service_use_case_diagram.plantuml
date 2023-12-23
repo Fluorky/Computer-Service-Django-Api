@@ -15,7 +15,7 @@ Admin --> (GenerateInvoice)
 Admin --> (View Invoice)
 ServiceTechnician --> (View Invoice)
 Customer --> (View Invoice)
-
+Customer --> (Payment)
 Customer --> (View Service Request)
 ServiceTechnician --> (View Service Request)
 ServiceTechnician --> (Update Service Request)

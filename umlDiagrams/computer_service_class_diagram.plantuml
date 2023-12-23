@@ -12,14 +12,17 @@ class Person {
 class ServiceRequest {
   + description: String
   + requested_by: Customer
+  + status: String
   + owned_by: ServiceTechnician
   + requested_at: DateTime
 }
 class Invoice {
   + total_amount: Decimal
   + payment_status: Boolean 
-  + service_request: ServiceRequest
-  + part: Part
+  + service_requests: ServiceRequest 
+  + parts: Part
+  + tax_rate: decimal
+  + tax_amount: decimal
 }
 class Part {
   + description: String
