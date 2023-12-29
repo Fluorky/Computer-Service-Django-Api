@@ -32,7 +32,7 @@ class ServiceRequest(CommonInfo):
         verbose_name_plural = 'Service Requests'
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} {self.price} {self.description} {self.requested_by} {self.requested_at} {self.state}"
     
      # Define state transitions
     @transition(field=state, source='new', target='open')
@@ -68,7 +68,7 @@ class Part(CommonInfo):
         verbose_name_plural = 'Parts'
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} {self.price} {self.description} {self.quantity_in_stock}"
 
 class Invoice(ServiceRequest):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -91,7 +91,7 @@ class Invoice(ServiceRequest):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} {self.total_amount} {self.parts} {self.total_amount} {self.service_requests}"
     
 
 
@@ -120,4 +120,14 @@ class Customer(Person):
         verbose_name_plural = 'Customers'
 
     def __str__(self):
-        return f"{self.name} {self.surname}"
+        return f"{self.name} {self.surname} {self.address_line1} {self.address_line2} {self.city} {self.country} {self.postal_code} {self.state}"
+
+
+"""
+class Warehouse(Part):
+    quantity_to_order : models.PositiveIntegerField(default=0)
+    last_one_order_date : models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.name} {self.quantity_to_order} {self.last_one_order_date}"
+"""
