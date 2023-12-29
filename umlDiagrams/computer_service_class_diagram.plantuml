@@ -16,6 +16,8 @@ class ServiceRequest {
   + status: String
   + owned_by: ServiceTechnician
   + requested_at: DateTime
+  + def __str__(self) : constructor
+  + (REST API):
   + class ServiceRequestListAPIView(generics.ListCreateAPIView) : view or create service_request
   + class ServiceRequestDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete service_request
 
@@ -27,21 +29,28 @@ class Invoice {
   + parts: Part
   + tax_rate: decimal
   + tax_amount: decimal
-  + class InvoiceListAPIView(generics.ListCreateAPIView) : view or create invoice
-  + class InvoiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete invoice
+  + def __str__(self) : constructor
   + calculate_total_amount_tax()
   + calculate_total_amount()
+  + (REST API):
+  + class InvoiceListAPIView(generics.ListCreateAPIView) : view or create invoice
+  + class InvoiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete invoice
+
 
 }
 class Part {
   + description: String
   + quantity_in_stock: Integer 
+  + def __str__(self) : constructor
+  + (REST API):
   + class PartListAPIView(generics.ListCreateAPIView) : view or create part
   + class PartDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete part
 
 }
 class ServiceTechnician {
   + specialization: String
+  + def __str__(self) : constructor
+  + (REST API):
   + class ServiceTechnicianListAPIView(generics.ListCreateAPIView) : view or create service_technician
   + class ServiceTechnicainDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete service_technician
 
@@ -53,6 +62,8 @@ class Customer {
   + city: String
   + state: String
   + country: String
+  + def __str__(self) : constructor
+  + (REST API):
   + class CustomerListAPIView(generics.ListCreateAPIView) : view or create customer
   + class CustomerDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete customer
 
@@ -62,6 +73,7 @@ class RepairLog{
   + start_time : DateTime
   + end_time : DateTime
   + serviceRequest : ServiceRequest
+  + def __str__(self) : constructor
   + add_repair_log()
   + edit_repair_log()
   + view_repair_log()
@@ -71,6 +83,7 @@ class RepairLog{
 class Warehouse{
   + quantity_to_order : Integer
   + last_one_order : DateTime
+  + def __str__(self) : constructor
   + add_warehouse() 
   + edit_warehouse()
   + view_warehouse()

@@ -123,11 +123,17 @@ class Customer(Person):
         return f"{self.name} {self.surname} {self.address_line1} {self.address_line2} {self.city} {self.country} {self.postal_code} {self.state}"
 
 
-"""
+class RepairLog(models.Model):
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    service_request = models.OneToOneField(ServiceRequest, on_delete=models.SET_NULL,null=True)
+
+    def __str__(self):
+        return f"{self.service_request} {self.start_time} {self.end_time}"
+
 class Warehouse(Part):
     quantity_to_order : models.PositiveIntegerField(default=0)
     last_one_order_date : models.DateTimeField()
 
     def __str__(self):
         return f"{self.name} {self.quantity_to_order} {self.last_one_order_date}"
-"""
