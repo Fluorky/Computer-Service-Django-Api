@@ -1,4 +1,8 @@
 @startuml
+
+class models.Model{
+
+}
 class CommonInfo {
   + name: String
   + price: Integer 
@@ -90,7 +94,10 @@ class Warehouse{
   + delete_warehouse()
 
 }
-CommonInfo --|> ServiceRequest
+models.Model --|> CommonInfo
+models.Model --|> Person
+models.Model --|> RepairLog
+CommonInfo --|>  ServiceRequest
 CommonInfo --|> Part
 Person --|> ServiceRequest
 ServiceRequest *--> Invoice
