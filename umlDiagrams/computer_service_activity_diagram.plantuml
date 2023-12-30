@@ -1,10 +1,36 @@
 @startuml
 
-(*) --> Create_Service_Request
---> Review_Service_Request : Review and Approve
---> Assign_Technician : Assign to Technician
---> Perform_Service : Perform Service
+(*) --> "Create service request" as Create_Service_Request 
+--> "Assign to technician" as Assign_Technician
+--> "Review service request" as Review_Service_Request 
+--> ===S1=== 
+if "Is correct request" then
+-->[yes] ===S2===
+else 
+-->[no] "Correct service request" as Correct
+--> ===S2===
+--> "Approve service request" as Approve_SR
+if "Is approvie" then
+-->[no] (*)
+else 
+-down->[yes] Start_Perform_Service : Start Perform Service
+--> ===S3=== 
+if "Is part in ware house" then
+-->[yes] ===S4===
+else 
+-->[no] "order part" as order
+if "Is part available to order" 
+--> [no] "Reject the service request"
+-->  (*)
+else
+--> [yes] Paid 
+--> Wait
+--> Colect
+--> ===S4===
+--> Use part
+--> Ending_Performint_Service_Request
 --> Payment : Paying for parts and service requests
+
 --> Generate_Invoice : Complete Service
 --> (*)
 

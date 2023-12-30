@@ -1,9 +1,11 @@
 @startuml
 
 participant "Customer" as Customer
+participant "PaymentService" as PaymentService
 participant "ServiceRequest" as ServiceRequest
 participant "Technician" as Technician
 participant "Invoice" as Invoice
+
 
 Customer -> ServiceRequest: Create Service Request
 activate ServiceRequest
@@ -11,7 +13,7 @@ activate ServiceRequest
 ServiceRequest --> Customer: Service Request Created
 
 Customer -> ServiceRequest: Review Service Request
-activate ServiceRequest
+
 
 ServiceRequest -> Technician: Assign Technician
 activate Technician
@@ -24,10 +26,15 @@ activate Technician
 
 Technician -> ServiceRequest: Service Performed
 deactivate Technician
-Customer -> ServiceRequest: Payment
-ServiceRequest -> PaymentService: Payment Request
+
+ServiceRequest -> PaymentService : Informations about receivables
 activate PaymentService
-PaymentService -> ServiceRequest : Payment Confirmed
+PaymentService -> Customer: Payment Reques
+
+
+Customer -> PaymentService: Payment
+
+ServiceRequest <- PaymentService  : Payment Confirmed
 deactivate PaymentService
 ServiceRequest -> Invoice: Generate Invoice
 activate Invoice
