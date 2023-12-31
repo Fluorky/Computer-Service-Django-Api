@@ -1,15 +1,19 @@
 from django.urls import path
 from .views import (
     ServiceRequestListAPIView, ServiceRequestDetailAPIView,
-    InvoiceListAPIView, InvoiceDetailAPIView,
-    PartListAPIView, PartDetailAPIView,
-    ServiceTechnicianListAPIView, ServiceTechnicianDetailAPIView,
-    CustomerListAPIView, CustomerDetailAPIView,
     ServiceRequestListCreateAPIView, ServiceRequestDetailUpdateDeleteAPIView,
+    InvoiceListAPIView, InvoiceDetailAPIView,
     InvoiceListCreateAPIView, InvoiceDetailUpdateDeleteAPIView,
+    PartListAPIView, PartDetailAPIView,
     PartListCreateAPIView, PartDetailUpdateDeleteAPIView,
+    ServiceTechnicianListAPIView, ServiceTechnicianDetailAPIView,
     ServiceTechnicianListCreateAPIView, ServiceTechnicianDetailUpdateDeleteAPIView,
-    CustomerListCreateAPIView, CustomerDetailUpdateDeleteAPIView
+    CustomerListAPIView, CustomerDetailAPIView,
+    CustomerListCreateAPIView, CustomerDetailUpdateDeleteAPIView,
+    RepairLogListAPIView, RepairLogDetailAPIView,
+    RepairLogListCreateAPIView, RepairLogDetailUpdateDeleteAPIView,
+    WarehouseListAPIView, WarehouseListCreateAPIView,
+    WarehouseDetailAPIView, WarehouseDetailUpdateDeleteAPIView
 )
 
 urlpatterns = [
@@ -37,5 +41,15 @@ urlpatterns = [
     path('api/customers/<int:pk>/', CustomerDetailAPIView.as_view(), name='customer_detail_api'),
     path('api/customers/', CustomerListCreateAPIView.as_view(), name='customer_list_create_api'),
     path('api/customers/<int:pk>/', CustomerDetailUpdateDeleteAPIView.as_view(), name='customer_detail_update_delete_api'),
+
+    path('api/repair-logs/',RepairLogListAPIView.as_view(), name='repair_log_list_api'),
+    path('api/repair-logs/<int:pk>/', RepairLogDetailAPIView.as_view(), name='repair_log_detail_api'),
+    path('api/repair-logs/', RepairLogListCreateAPIView.as_view(), name='repair_log_list_create_api'),
+    path('api/repair-logs/<int:pk>/', RepairLogDetailUpdateDeleteAPIView.as_view(), name='repair_log_detail_update_delete_api'),
+
+    path('api/warehouses/', WarehouseListAPIView.as_view(), name='service_request_list_api'),
+    path('api/warehouses/<int:pk>/', WarehouseDetailAPIView.as_view(), name='service_request_detail_api'),
+    path('api/warehouses/', WarehouseListCreateAPIView.as_view(), name='service_request_list_create_api'),
+    path('api/warehouses/<int:pk>/', WarehouseDetailUpdateDeleteAPIView.as_view(), name='service_request_detail_update_delete_api'),
 ]
 

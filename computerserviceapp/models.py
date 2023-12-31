@@ -1,7 +1,16 @@
 from django.db import models
 from django_fsm import FSMField, transition
+from django.db.models import Sum, F
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
+class BasicInfo(models.Model):
+    name = models.CharField(max_length=100)
+    class Meta:
+        abstract = True
 
-class CommonInfo(models.Model):
+class CommonInfo(BasicInfo):
     name = models.CharField(max_length=100)
     price = models.PositiveIntegerField(default=0)
     tax = models.DecimalField(default=0,max_digits=10, decimal_places=4)
@@ -17,7 +26,6 @@ class Person(models.Model):
     
     class Meta:
         abstract = True
-
 
 
 class ServiceRequest(CommonInfo):
@@ -71,8 +79,8 @@ class Part(CommonInfo):
     def __str__(self):
         return f"{self.name} {self.price} {self.description} {self.quantity_in_stock}"
 
-class Invoice(CommonInfo):
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+class Invoice(BasicInfo):
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     payment_status = models.BooleanField(default=False)
     service_requests = models.ManyToManyField(ServiceRequest, related_name='invoices')
     parts = models.ManyToManyField(Part, related_name='invoices')
@@ -81,29 +89,22 @@ class Invoice(CommonInfo):
         verbose_name = 'Invoice'
         verbose_name_plural = 'Invoices'
 
-    def calculate_total_amount(self):
-        #To do#
-        total_amount_before_tax = 0
-        # Calculate tax for ServiceRequests and parts
-        """for sr in self.service_requests.all():
-            total_amount_before_tax += sr.price * (1 + sr.tax)
-    
-        for part in self.parts.all():
-            total_amount_before_tax += part.price * (1 + part.tax)
+    def calculate_total_tax(self):
+        return sum(part.price * part.tax for part in self.parts.all()) + sum(sr.price * sr.tax for sr in self.service_requests.all())
 
+    def calculate_total_amount_without_tax(self):
+        return sum(part.price for part in self.parts.all()) + sum(sr.price for sr in self.service_requests.all())
 
-        self.total_amount = total_amount_before_tax"""
+    def calculate_total_amount_with_tax(self):
+        return self.calculate_total_amount_without_tax() + self.calculate_total_tax()
 
     def save(self, *args, **kwargs):
-        """
-        self.calculate_total_amount()
-        super().save(*args, **kwargs)"""
+        super().save(*args, **kwargs)
+        self.total_amount = self.calculate_total_amount_with_tax()
 
     def __str__(self):
-        return f"{self.name} {self.total_amount} {self.parts} {self.total_amount} {self.service_requests}"
-    
-
-
+       return f"{self.name} {self.total_amount} {self.parts} {self.total_amount} {self.service_requests}"
+   
 class ServiceTechnician(Person):
    
     specialization = models.CharField(max_length=100)

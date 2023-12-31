@@ -3,9 +3,13 @@
 class models.Model{
 
 }
+class BasicInfo{
+  + name: String
+}
 class CommonInfo {
   + name: String
   + price: Integer 
+  + tax: Double
 }
 class Person {
   + name: String
@@ -94,7 +98,8 @@ class Warehouse{
   + delete_warehouse()
 
 }
-models.Model --|> CommonInfo
+models.Model --|> BasicInfo
+BasicInfo --|> CommonInfo
 models.Model --|> Person
 models.Model --|> RepairLog
 CommonInfo --|>  ServiceRequest
