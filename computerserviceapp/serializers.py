@@ -16,10 +16,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = '__all__'
-"""class InvoiceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Invoice
-        fields = '__all__' """
 
 class PartSerializer(serializers.ModelSerializer):
     class Meta:
