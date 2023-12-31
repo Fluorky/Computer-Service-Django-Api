@@ -14,7 +14,10 @@ if "Is approvie" then
 -->[no] (*)
 else 
 -down->[yes] Start_Perform_Service : Start Perform Service
---> ===S3=== 
+if "Cause of a problem is hardware part" then
+--> [no] "Performing Service Request" as Performing
+else 
+--> [yes] ===S3=== 
 if "Is part in ware house" then
 -->[yes] ===S4===
 else 
@@ -24,11 +27,15 @@ if "Is part available to order"
 -->  (*)
 else
 --> [yes] Paid 
---> Wait
---> Colect
+--> "Wait for a delivery"
+--> "Colect a delivery"
+--> "Add to ware house"
 --> ===S4===
---> Use part
---> Ending_Performint_Service_Request
+--> Colect
+
+--> "Change part"
+--> "Performing Service Request" as Performing
+--> "Ending Performing Service Request"
 --> Payment : Paying for parts and service requests
 
 --> Generate_Invoice : Complete Service
