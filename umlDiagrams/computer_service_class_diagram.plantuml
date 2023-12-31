@@ -105,6 +105,7 @@ models.Model --|> RepairLog
 CommonInfo --|>  ServiceRequest
 CommonInfo --|> Part
 Person --|> ServiceRequest
+BasicInfo --|> Invoice
 ServiceRequest *--> Invoice
 ServiceRequest *-- Customer : requested_by
 ServiceRequest *-- ServiceTechnician : owned_by
