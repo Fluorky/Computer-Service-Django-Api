@@ -4,6 +4,7 @@ from django_fsm import FSMField, transition
 class CommonInfo(models.Model):
     name = models.CharField(max_length=100)
     price = models.PositiveIntegerField(default=0)
+    tax = models.DecimalField(default=0,max_digits=10, decimal_places=4)
     
     class Meta:
         abstract = True
@@ -62,7 +63,7 @@ class ServiceRequest(CommonInfo):
 class Part(CommonInfo):
     description = models.CharField(max_length=100)
     quantity_in_stock = models.PositiveIntegerField(default=0)
-
+    
     class Meta:
         verbose_name = 'Part'
         verbose_name_plural = 'Parts'
@@ -70,7 +71,7 @@ class Part(CommonInfo):
     def __str__(self):
         return f"{self.name} {self.price} {self.description} {self.quantity_in_stock}"
 
-class Invoice(ServiceRequest):
+class Invoice(CommonInfo):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.BooleanField(default=False)
     service_requests = models.ManyToManyField(ServiceRequest, related_name='invoices')
@@ -81,14 +82,22 @@ class Invoice(ServiceRequest):
         verbose_name_plural = 'Invoices'
 
     def calculate_total_amount(self):
-        # Calculate total amount including tax
-        total_amount_before_tax = self.total_amount
-        self.total_amount = total_amount_before_tax
+        #To do#
+        total_amount_before_tax = 0
+        # Calculate tax for ServiceRequests and parts
+        """for sr in self.service_requests.all():
+            total_amount_before_tax += sr.price * (1 + sr.tax)
+    
+        for part in self.parts.all():
+            total_amount_before_tax += part.price * (1 + part.tax)
+
+
+        self.total_amount = total_amount_before_tax"""
 
     def save(self, *args, **kwargs):
-        # Calculate tax before saving the invoice
+        """
         self.calculate_total_amount()
-        super().save(*args, **kwargs)
+        super().save(*args, **kwargs)"""
 
     def __str__(self):
         return f"{self.name} {self.total_amount} {self.parts} {self.total_amount} {self.service_requests}"
