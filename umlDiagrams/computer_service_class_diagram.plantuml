@@ -1,68 +1,96 @@
 @startuml
 
-class models.Model{
-
+class models.Model {
 }
-class BasicInfo{
+
+class BasicInfo {
   + name: String
 }
+
 class CommonInfo {
   + name: String
-  + price: Integer 
+  + price: Integer
   + tax: Double
 }
+
 class Person {
   + name: String
   + surname: String
   + email: Email
   + phone_number: String
-
 }
+
 class ServiceRequest {
   + description: String
   + requested_by: Customer
+  + assigned_technician: ServiceTechnician
   + status: String
-  + owned_by: ServiceTechnician
   + requested_at: DateTime
+  + completion_deadline: DateTime
+  + priority: Integer
+  + comments: List<Comment>
   + def __str__(self) : constructor
+  + assign_technician(technician: ServiceTechnician)
+  + complete_service()
+  + escalate_priority()
+  + generate_invoice()
+  + add_comment(comment: Comment)
   + (REST API):
   + class ServiceRequestListAPIView(generics.ListCreateAPIView) : view or create service_request
   + class ServiceRequestDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete service_request
-
 }
+
+class Comment {
+  + text: String
+  + posted_by: Person
+  + posted_at: DateTime
+}
+
 class Invoice {
   + total_amount: Decimal
-  + payment_status: Boolean 
-  + service_requests: ServiceRequest 
-  + parts: Part
+  + payment_status: Boolean
+  + service_requests: List<ServiceRequest>
+  + parts: List<Part>
   + tax_rate: decimal
   + tax_amount: decimal
+  + billing_address: String
+  + shipping_address: String
   + def __str__(self) : constructor
   + calculate_total_amount_tax()
   + calculate_total_amount()
+  + send_invoice_email()
+  + mark_as_paid()
   + (REST API):
   + class InvoiceListAPIView(generics.ListCreateAPIView) : view or create invoice
   + class InvoiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete invoice
-
-
 }
+
 class Part {
   + description: String
-  + quantity_in_stock: Integer 
+  + quantity_in_stock: Integer
+  + supplier: Supplier
   + def __str__(self) : constructor
   + (REST API):
   + class PartListAPIView(generics.ListCreateAPIView) : view or create part
   + class PartDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete part
-
 }
+
+class Supplier {
+  + name: String
+  + contact_person: Person
+  + address: String
+  + phone_number: String
+}
+
 class ServiceTechnician {
   + specialization: String
+  + assigned_requests: List<ServiceRequest>
   + def __str__(self) : constructor
   + (REST API):
   + class ServiceTechnicianListAPIView(generics.ListCreateAPIView) : view or create service_technician
-  + class ServiceTechnicainDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete service_technician
-
+  + class ServiceTechnicianDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete service_technician
 }
+
 class Customer {
   + address_line1: String
   + address_line2: String
@@ -70,17 +98,20 @@ class Customer {
   + city: String
   + state: String
   + country: String
+  + service_requests: List<ServiceRequest>
   + def __str__(self) : constructor
+  + place_service_request(request: ServiceRequest)
+  + view_history()
   + (REST API):
   + class CustomerListAPIView(generics.ListCreateAPIView) : view or create customer
   + class CustomerDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete customer
-
 }
 
-class RepairLog{
+class RepairLog {
   + start_time : DateTime
   + end_time : DateTime
   + serviceRequest : ServiceRequest
+  + technician_notes: String
   + def __str__(self) : constructor
   + add_repair_log()
   + edit_repair_log()
@@ -88,30 +119,33 @@ class RepairLog{
   + delete_repair_log()
 }
 
-class Warehouse{
+class Warehouse {
   + quantity_to_order : Integer
   + last_one_order : DateTime
+  + parts_in_stock: List<Part>
   + def __str__(self) : constructor
-  + add_warehouse() 
+  + add_warehouse()
   + edit_warehouse()
   + view_warehouse()
   + delete_warehouse()
-
 }
+
 models.Model --|> BasicInfo
 BasicInfo --|> CommonInfo
 models.Model --|> Person
 models.Model --|> RepairLog
 CommonInfo --|>  ServiceRequest
 CommonInfo --|> Part
-Person --|> ServiceRequest
+Person -- ServiceRequest
 BasicInfo --|> Invoice
 ServiceRequest *--> Invoice
 ServiceRequest *-- Customer : requested_by
 ServiceRequest *-- ServiceTechnician : owned_by
 Invoice <--* Part
+Part -- Supplier
 Person --|> ServiceTechnician
 Person --|> Customer
 ServiceRequest -- RepairLog
 Part --|> Warehouse
+ServiceRequest "comments" *-- "1" Comment
 @enduml

@@ -5,7 +5,9 @@ participant "PaymentService" as PaymentService
 participant "ServiceRequest" as ServiceRequest
 participant "Technician" as Technician
 participant "Invoice" as Invoice
-
+participant "PartSupplier" as PartSupplier
+participant "Warehouse" as Warehouse
+participant "RepairLog" as RepairLog
 
 Customer -> ServiceRequest: Create Service Request
 activate ServiceRequest
@@ -13,7 +15,6 @@ activate ServiceRequest
 ServiceRequest --> Customer: Service Request Created
 
 Customer -> ServiceRequest: Review Service Request
-
 
 ServiceRequest -> Technician: Assign Technician
 activate Technician
@@ -27,15 +28,32 @@ activate Technician
 Technician -> ServiceRequest: Service Performed
 deactivate Technician
 
-ServiceRequest -> PaymentService : Informations about receivables
+ServiceRequest -> PartSupplier: Order Parts
+activate PartSupplier
+
+PartSupplier --> ServiceRequest: Parts Ordered
+deactivate PartSupplier
+
+ServiceRequest -> Warehouse: Update Warehouse
+activate Warehouse
+
+Warehouse --> ServiceRequest: Warehouse Updated
+deactivate Warehouse
+
+ServiceRequest -> RepairLog: Generate Repair Log
+activate RepairLog
+
+RepairLog --> ServiceRequest: Repair Log Generated
+deactivate RepairLog
+
+ServiceRequest -> PaymentService: Information about receivables
 activate PaymentService
-PaymentService -> Customer: Payment Reques
 
-
+PaymentService -> Customer: Payment Request
 Customer -> PaymentService: Payment
-
-ServiceRequest <- PaymentService  : Payment Confirmed
+PaymentService --> Customer: Payment Confirmed
 deactivate PaymentService
+
 ServiceRequest -> Invoice: Generate Invoice
 activate Invoice
 

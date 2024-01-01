@@ -10,7 +10,7 @@ else
 -->[no] "Correct service request" as Correct
 --> ===S2===
 --> "Approve service request" as Approve_SR
-if "Is approvie" then
+if "Is approved" then
 -->[no] (*)
 else 
 -down->[yes] Start_Perform_Service : Start Perform Service
@@ -18,27 +18,36 @@ if "Cause of a problem is hardware part" then
 --> [no] "Performing Service Request" as Performing
 else 
 --> [yes] ===S3=== 
-if "Is part in ware house" then
+if "Is part in warehouse" then
 -->[yes] ===S4===
 else 
--->[no] "order part" as order
-if "Is part available to order" 
+-->[no] "Order part" as Order
+if "Is part available to order" then
 --> [no] "Reject the service request"
 -->  (*)
 else
 --> [yes] Paid 
---> "Wait for a delivery"
---> "Colect a delivery"
---> "Add to ware house"
+--> "Wait for delivery"
+--> "Collect the delivery"
+--> "Add to warehouse"
 --> ===S4===
---> Colect
-
+--> "Collect"
 --> "Change part"
 --> "Performing Service Request" as Performing
 --> "Ending Performing Service Request"
+--> Generate_Repair_Log : Generate Repair Log
 --> Payment : Paying for parts and service requests
-
 --> Generate_Invoice : Complete Service
+--> ===S5===
+if "Is customer satisfied" then
+-->[no] "Get Negative Customer Feedback"
+--> "Review Feedback"
+--> "Corect service request"
+--> ===S5===
+else
+-->[yes] "Get Positive Customer Feedback" as Customer_Feedback
+--> Update_Customer_Record : Update Customer Record
+--> "Service Request Completed"
 --> (*)
 
 @enduml

@@ -7,18 +7,30 @@ actor Admin
 usecase "Create Service Request" as CreateServiceRequest
 usecase "Assign Technician" as AssignTechnician
 usecase "Generate Invoice" as GenerateInvoice
-
+usecase "View Invoice" as ViewInvoice
+usecase "Payment" as Payment
+usecase "View Service Request" as ViewServiceRequest
+usecase "Update Service Request" as UpdateServiceRequest
+usecase "Delete Service Request" as DeleteServiceRequest
+usecase "Review Service Request" as ReviewServiceRequest
+usecase "Escalate Service Request" as EscalateServiceRequest
+usecase "Handle Parts" as HandleParts
+usecase "Generate Repair Log" as GenerateRepairLog
 
 Customer --> (CreateServiceRequest)
 Admin --> (AssignTechnician)
 Admin --> (GenerateInvoice)
-Admin --> (View Invoice)
-ServiceTechnician --> (View Invoice)
-Customer --> (View Invoice)
+Admin --> (ViewInvoice)
+ServiceTechnician --> (ViewInvoice)
+Customer --> (ViewInvoice)
 Customer --> (Payment)
-Customer --> (View Service Request)
-ServiceTechnician --> (View Service Request)
-ServiceTechnician --> (Update Service Request)
-ServiceTechnician --> (Delete Service Request)
+Customer --> (ViewServiceRequest)
+ServiceTechnician --> (ViewServiceRequest)
+ServiceTechnician --> (UpdateServiceRequest)
+ServiceTechnician --> (DeleteServiceRequest)
+ServiceTechnician --> (ReviewServiceRequest)
+Admin --> (EscalateServiceRequest)
+Admin --> (HandleParts)
+Admin --> (GenerateRepairLog)
 
 @enduml

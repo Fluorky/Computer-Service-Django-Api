@@ -1,31 +1,30 @@
 @startuml
 
-
-state ServiceRequest{
-state Draft : wait for opening
-state Open : wait for interface 
-state Payment{
-  Unpaid: invoice Unpaid
-  Paid : invoce paid
+state ServiceRequest {
+  state Draft : Wait for opening
+  state Open : Wait for interface 
+  state Payment {
+    Unpaid: Invoice Unpaid
+    Paid : Invoice Paid
+  }
+  state InProgress : Task in progress
+  state PartsHandling : Handle Parts
+  state RepairLogGenerated : Repair Log Generated
+  state Completed : Task completed
+  state Closed : Task closed
 }
-state InProgress : task in InProgress
-state Completed : task complteted
-state Closed : task closed
-  
-}
-
 
 [*] --> Draft
 Draft --> Open: Submit
-Open -->  InProgress: Start Service
-InProgress --> Unpaid
-Paid --> Completed: Complete Service
-Completed --> Closed: Close Request
+Open --> InProgress: Start Service
+InProgress --> PartsHandling: Handle Parts
+PartsHandling --> RepairLogGenerated: Generate Repair Log
+RepairLogGenerated --> Completed: Complete Service
+Completed --> Unpaid
+Paid --> Closed: Close Request
 Closed --> [*]: Reopen
-
 
 Unpaid --> Paid: Make Payment
 Paid --> [*]: Payment Received
-
 
 @enduml
