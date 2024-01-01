@@ -145,10 +145,6 @@ class RepairLog {
   + serviceRequest : ServiceRequest
   + technician_notes: String
   + def __str__(self) : constructor
-  + add_repair_log()
-  + edit_repair_log()
-  + view_repair_log()
-  + delete_repair_log()
   + (REST API):
   + class RepairLogListCreateAPIView(generics.ListCreateAPIView): view or create repair_log
   + class RepairLogDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete repair_log
@@ -161,10 +157,6 @@ class Warehouse {
   + last_one_order : DateTime
   + parts_in_stock: List<Part>
   + def __str__(self) : constructor
-  + add_warehouse()
-  + edit_warehouse()
-  + view_warehouse()
-  + delete_warehouse()
   + (REST API):
   + class WarehouseListCreateAPIView(generics.ListCreateAPIView): view or create warehouse
   + class WarehouseDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete warehouse
