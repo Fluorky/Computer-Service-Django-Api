@@ -35,9 +35,6 @@ class ServiceRequest {
   + escalate_priority()
   + generate_invoice()
   + add_comment(comment: Comment)
-  + (REST API):
-  + class ServiceRequestListAPIView(generics.ListCreateAPIView) : view or create service_request
-  + class ServiceRequestDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete service_request
 }
 
 class Comment {
@@ -60,9 +57,6 @@ class Invoice {
   + calculate_total_amount()
   + send_invoice_email()
   + mark_as_paid()
-  + (REST API):
-  + class InvoiceListAPIView(generics.ListCreateAPIView) : view or create invoice
-  + class InvoiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete invoice
 }
 
 class Part {
@@ -70,9 +64,6 @@ class Part {
   + quantity_in_stock: Integer
   + supplier: Supplier
   + def __str__(self) : constructor
-  + (REST API):
-  + class PartListAPIView(generics.ListCreateAPIView) : view or create part
-  + class PartDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete part
 }
 
 class Supplier {
@@ -86,9 +77,6 @@ class ServiceTechnician {
   + specialization: String
   + assigned_requests: List<ServiceRequest>
   + def __str__(self) : constructor
-  + (REST API):
-  + class ServiceTechnicianListAPIView(generics.ListCreateAPIView) : view or create service_technician
-  + class ServiceTechnicianDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete service_technician
 }
 
 class Customer {
@@ -102,9 +90,20 @@ class Customer {
   + def __str__(self) : constructor
   + place_service_request(request: ServiceRequest)
   + view_history()
-  + (REST API):
-  + class CustomerListAPIView(generics.ListCreateAPIView) : view or create customer
-  + class CustomerDetailAPIView(generics.RetrieveUpdateDestroyAPIView) retrieve or update or delete customer
+}
+
+class Admin {
+  + username: String
+  + password: String
+  + def __str__(self) : constructor
+  + assign_technician(service_request: ServiceRequest, technician: ServiceTechnician)
+  + generate_invoice(service_request: ServiceRequest)
+  + escalate_service_request(service_request: ServiceRequest)
+  + handle_parts(service_request: ServiceRequest)
+  + generate_repair_log(service_request: ServiceRequest)
+  + view_service_request(service_request: ServiceRequest)
+  + update_service_request(service_request: ServiceRequest)
+  + delete_service_request(service_request: ServiceRequest)
 }
 
 class RepairLog {
@@ -148,4 +147,8 @@ Person --|> Customer
 ServiceRequest -- RepairLog
 Part --|> Warehouse
 ServiceRequest "comments" *-- "1" Comment
+ServiceTechnician --|> Admin
+Admin *-- ServiceRequest : Handles
+ServiceTechnician *-- ServiceRequest : Manages
+
 @enduml
