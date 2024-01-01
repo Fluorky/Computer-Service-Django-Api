@@ -13,8 +13,10 @@ from .views import (
     RepairLogListAPIView, RepairLogDetailAPIView,
     RepairLogListCreateAPIView, RepairLogDetailUpdateDeleteAPIView,
     WarehouseListAPIView, WarehouseListCreateAPIView,
-    WarehouseDetailAPIView, WarehouseDetailUpdateDeleteAPIView
+    WarehouseDetailAPIView, WarehouseDetailUpdateDeleteAPIView,
+    CreateUserView, LoginView
 )
+from rest_framework.authtoken.views import obtain_auth_token  
 
 urlpatterns = [
     path('api/service-requests/', ServiceRequestListAPIView.as_view(), name='service_request_list_api'),
@@ -51,5 +53,8 @@ urlpatterns = [
     path('api/warehouses/<int:pk>/', WarehouseDetailAPIView.as_view(), name='service_request_detail_api'),
     path('api/warehouses/', WarehouseListCreateAPIView.as_view(), name='service_request_list_create_api'),
     path('api/warehouses/<int:pk>/', WarehouseDetailUpdateDeleteAPIView.as_view(), name='service_request_detail_update_delete_api'),
+    path('api/create-user/',  CreateUserView.as_view(), name='create_user'),
+    path('api/token/', obtain_auth_token, name='obtain-token'),
+    path('api/login/', LoginView.as_view(), name='login'),
 ]
 

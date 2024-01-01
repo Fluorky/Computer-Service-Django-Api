@@ -49,6 +49,12 @@ class Comment {
   + text: String
   + posted_by: Person
   + posted_at: DateTime
+  + def __str__(self) : constructor
+  + (REST API):
+  + class CommentListCreateAPIView(generics.ListCreateAPIView): view or create comment
+  + class CommentDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete comment
+  + class CommentListAPIView(generics.ListAPIView): view list of comments
+  + class CommentDetailAPIView(generics.RetrieveAPIView): retrieve comment
 }
 
 class Invoice {
