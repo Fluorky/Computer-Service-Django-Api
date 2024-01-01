@@ -1,5 +1,4 @@
 from rest_framework import generics
-from rest_framework.response import Response
 from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse
 from .serializers import (
     ServiceRequestSerializer, InvoiceSerializer, PartSerializer,
@@ -115,6 +114,7 @@ class WarehouseDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 class WarehouseListCreateAPIView(generics.ListCreateAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
+
 
 class WarehouseDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Warehouse.objects.all()
