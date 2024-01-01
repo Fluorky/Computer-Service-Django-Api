@@ -115,7 +115,6 @@ class WarehouseListCreateAPIView(generics.ListCreateAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
-
 class WarehouseDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer

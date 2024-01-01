@@ -13,7 +13,7 @@ abstract class CommonInfo {
   + tax: Double
 }
 
-class Person {
+abstract class Person {
   + name: String
   + surname: String
   + email: Email
@@ -38,6 +38,11 @@ class ServiceRequest {
   + escalate_priority()
   + generate_invoice()
   + add_comment(comment: Comment)
+  + (REST API):
+  + class ServiceRequestListCreateAPIView(generics.ListCreateAPIView): view or create service_request
+  + class ServiceRequestDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete service_request
+  + class ServiceRequestListAPIView(generics.ListAPIView): view list of service_requests
+  + class ServiceRequestDetailAPIView(generics.RetrieveAPIView): retrieve service_request
 }
 
 class Comment {
@@ -58,6 +63,11 @@ class Invoice {
   + calculate_total_amount()
   + send_invoice_email()
   + mark_as_paid()
+  + (REST API):
+  + class InvoiceListCreateAPIView(generics.ListCreateAPIView): view or create invoice
+  + class InvoiceDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete invoice
+  + class InvoiceListAPIView(generics.ListAPIView): view list of invoices
+  + class InvoiceDetailAPIView(generics.RetrieveAPIView): retrieve invoice
 }
 
 class Part {
@@ -65,6 +75,11 @@ class Part {
   + quantity_in_stock: Integer
   + supplier: Supplier
   + def __str__(self) : constructor
+  + (REST API):
+  + class PartListCreateAPIView(generics.ListCreateAPIView): view or create part
+  + class PartDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete part
+  + class PartListAPIView(generics.ListAPIView): view list of parts
+  + class PartDetailAPIView(generics.RetrieveAPIView): retrieve part
 }
 
 class Supplier {
@@ -72,6 +87,11 @@ class Supplier {
   + contact_person: Person
   + address: Address
   + phone_number: String
+  + (REST API):
+  + class SupplierListCreateAPIView(generics.ListCreateAPIView): view or create supplier
+  + class SupplierDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete supplier
+  + class SupplierListAPIView(generics.ListAPIView): view list of suppliers
+  + class SupplierDetailAPIView(generics.RetrieveAPIView): retrieve supplier
 }
 
 class ServiceTechnician {
@@ -79,6 +99,11 @@ class ServiceTechnician {
   + assigned_requests: List<ServiceRequest>
   + address: Address
   + def __str__(self) : constructor
+  + (REST API):
+  + class ServiceTechnicianListCreateAPIView(generics.ListCreateAPIView): view or create service_technician
+  + class ServiceTechnicianDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete service_technician
+  + class ServiceTechnicianListAPIView(generics.ListAPIView): view list of service_technicians
+  + class ServiceTechnicianDetailAPIView(generics.RetrieveAPIView): retrieve service_technician
 }
 
 class Customer {
@@ -87,6 +112,11 @@ class Customer {
   + def __str__(self) : constructor
   + place_service_request(request: ServiceRequest)
   + view_history()
+  + (REST API):
+  + class CustomerListCreateAPIView(generics.ListCreateAPIView): view or create customer
+  + class CustomerDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete customer
+  + class CustomerListAPIView(generics.ListAPIView): view list of customers
+  + class CustomerDetailAPIView(generics.RetrieveAPIView): retrieve customer
 }
 
 class Admin {
@@ -102,6 +132,11 @@ class Admin {
   + view_service_request(service_request: ServiceRequest)
   + update_service_request(service_request: ServiceRequest)
   + delete_service_request(service_request: ServiceRequest)
+  + (REST API):
+  + class AdminListCreateAPIView(generics.ListCreateAPIView): view or create admin
+  + class AdminDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete admin
+  + class AdminListAPIView(generics.ListAPIView): view list of admins
+  + class AdminDetailAPIView(generics.RetrieveAPIView): retrieve admin
 }
 
 class RepairLog {
@@ -114,6 +149,11 @@ class RepairLog {
   + edit_repair_log()
   + view_repair_log()
   + delete_repair_log()
+  + (REST API):
+  + class RepairLogListCreateAPIView(generics.ListCreateAPIView): view or create repair_log
+  + class RepairLogDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete repair_log
+  + class RepairLogListAPIView(generics.ListAPIView): view list of repair_logs
+  + class RepairLogDetailAPIView(generics.RetrieveAPIView): retrieve repair_log
 }
 
 class Warehouse {
@@ -125,6 +165,11 @@ class Warehouse {
   + edit_warehouse()
   + view_warehouse()
   + delete_warehouse()
+  + (REST API):
+  + class WarehouseListCreateAPIView(generics.ListCreateAPIView): view or create warehouse
+  + class WarehouseDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete warehouse
+  + class WarehouseListAPIView(generics.ListAPIView): view list of warehouses
+  + class WarehouseDetailAPIView(generics.RetrieveAPIView): retrieve warehouse
 }
 
 class Address {
@@ -134,6 +179,11 @@ class Address {
   + city: String
   + state: String
   + country: String
+  + (REST API):
+  + class AddressListCreateAPIView(generics.ListCreateAPIView): view or create address
+  + class AddressDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete address
+  + class AddressListAPIView(generics.ListAPIView): view list of addresses
+  + class AddressDetailAPIView(generics.RetrieveAPIView): retrieve address
 }
 
 models.Model --|> BasicInfo
@@ -156,6 +206,7 @@ Part --|> Warehouse
 ServiceRequest "comments" *-- "1" Comment
 ServiceTechnician --|> Admin 
 Admin *-- ServiceRequest : Handles
+Admin *-- RepairLog : Handles
 ServiceTechnician *-- ServiceRequest : Manages
 Customer -- Address
 Admin -- Address
