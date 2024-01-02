@@ -37,8 +37,23 @@ The project is part of object-oriented design classes and the project is under d
 
 **python manage.py runserver 0.0.0.0:8000**
 
+8. Create superuser 
+
+**python manage.py createsuperuser**
+
+9. Get token and use this token in app or using admin dashboard create users to using app and get token of these user
+Use this address yourIPAdress:8000 with url patch for example:
+
+**http://127.0.0.1:8000/api/token/**
+
+To use this token you should write in http request header
+
+"Authorization" : "Token ***YourToken***"
+
 8. Use this address yourIPAdress:8000 with url patch to intergate with API,for example: ***http://127.0.0.1:8000/api/service-requests/4/***
 If you want to check it before, you should use postman or browser.
+
+
 9. To run unit tests please use this command:
 
 **python manage.py test computerserviceapp**

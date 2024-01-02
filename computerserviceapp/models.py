@@ -1,9 +1,7 @@
 from django.db import models
 from django_fsm import FSMField, transition
-from django.dispatch import receiver
-from django.db.models import Sum, F
-from django.db.models.signals import post_save, m2m_changed
-
+from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.models import AbstractUser
 
 
 class BasicInfo(models.Model):
@@ -20,10 +18,10 @@ class CommonInfo(BasicInfo):
         abstract = True
 
 class Person(models.Model):
-    name = models.CharField(max_length=100)
-    surname = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, null=True)
+    surname = models.CharField(max_length=100,null=True)
     email = models.EmailField()
-    phone_number = models.CharField(max_length=11)
+    phone_number = models.CharField(max_length=11,null=True)
     
     class Meta:
         abstract = True
@@ -105,17 +103,58 @@ class Invoice(BasicInfo):
 
     def __str__(self):
        return f"{self.name} {self.total_amount} {self.parts} {self.total_amount} {self.service_requests}"
-   
-class ServiceTechnician(Person):
-   
+
+
+
+class ServiceTechnicianManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(email, password, **extra_fields)
+
+class ServiceTechnician(AbstractUser):
     specialization = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)  
+    password = models.CharField(max_length=128) 
+
+    USERNAME_FIELD = 'email'  # Use email as the username field
+
+    REQUIRED_FIELDS = ['username']  # Add any additional required fields
 
     class Meta:
         verbose_name = 'Service Technician'
         verbose_name_plural = 'Service Technicians'
 
+
+    objects = ServiceTechnicianManager()
+    """groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='service_technician_set',  # Add related_name
+        blank=True,
+        verbose_name='groups',
+        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='service_technician_set',  # Add related_name
+        blank=True,
+        verbose_name='user permissions',
+        help_text='Specific permissions for this user.',
+    )"""
+
     def __str__(self):
-        return f"{self.name} {self.surname}"
+        return f"{self.username} {self.specialization}" 
+
 
 class Customer(Person):
     

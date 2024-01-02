@@ -5,16 +5,18 @@ from .serializers import (
     ServiceTechnicianSerializer, CustomerSerializer, RepairLogSerializer, WarehouseSerializer
 )
 from rest_framework.permissions import IsAuthenticated  # Import the IsAuthenticated permission
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
 from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import authenticate
+
 
 class LoginView(APIView):
+    #permission_classes = [AllowAny, ]
+
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -22,12 +24,68 @@ class LoginView(APIView):
         user = authenticate(request, username=username, password=password)
 
         if user:
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
+
+            try:
+                token = Token.objects.get(user=user)
+            except Token.DoesNotExist:
+                token = Token.objects.create(user=user)
+
+            return Response({'token': token.key, 'user': str(user)}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class CreateUserView(APIView):
+    #permission_classes = [AllowAny, ]
+    def post(self, request, *args, **kwargs):
+        # Extract username and password from the request data
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email')
+
+        if not username or not password or not email:
+            return Response({'error': 'Username email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if the user with the given username already exists
+        if ServiceTechnician.objects.filter(username=username).exists():
+            return Response({'error': 'Username already taken'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if ServiceTechnician.objects.filter(email=email).exists():
+            return Response({'error': 'Email already taken'}, status=status.HTTP_400_BAD_REQUEST)
+        # Create and save the new user
+        new_user = ServiceTechnician.objects.create(
+            username=username,
+            email=email,
+            password=make_password(password)  # Hash the password
+        )
+        new_user.save()
+
+        return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+
+
+"""
+class LoginView(APIView):
+    permission_classes= [AllowAny, ]
+    def post(self, request, *args, **kwargs):
+        username= request.data.get('username')
+        password = request.data.get('password')
+        #print(f"Email: {username}, Password: {password}")  # Debugging line
+        #cf = ServiceTechnician.objects.filter(username=username).first()
+        #print(cf)
+        #print(cf.check_password(password))
+
+        user = authenticate(request, username=username, password=password)
+        print(user)
+        if user:
+        #if cf and cf.check_password(password):
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+"""
+
+"""
+class CreateUserView(APIView):
+    permission_classes = [AllowAny, ]
     def post(self, request, *args, **kwargs):
         # Extract username and password from the request data
         username = request.data.get('username')
@@ -37,19 +95,47 @@ class CreateUserView(APIView):
             return Response({'error': 'Username and password are required'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if the user with the given username already exists
-        if User.objects.filter(username=username).exists():
+        if ServiceTechnician.objects.filter(username=username).exists():
             return Response({'error': 'Username already taken'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Create and save the new user
-        new_user = User.objects.create(
+        new_user = ServiceTechnician.objects.create(
             username=username,
             password=make_password(password)  # Hash the password
         )
         new_user.save()
 
         return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+"""
+"""
+#class CreateServiceTechnicianView(APIView):
+class CreateUserView(APIView):
+    permission_classes = [AllowAny, ]
+    def post(self, request, *args, **kwargs):
+        # Extract username and password from the request data
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user_ptr_id = request.data.get('user_ptr_id')
 
 
+        if not username or not password :
+            return Response({'error': 'Username and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if the user with the given username already exists
+        if ServiceTechnician.objects.filter(username=username).exists():
+            return Response({'error': 'Username already taken'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create and save the new user
+        new_user = ServiceTechnician.objects.create(
+            username=username,
+            password=make_password(password), # Hash the password
+            user_ptr_id=user_ptr_id
+            
+        )
+        new_user.save()
+
+        return Response({'message': 'Service technician created successfully'}, status=status.HTTP_201_CREATED)
+"""
 class ServiceRequestListAPIView(generics.ListCreateAPIView):
     queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
@@ -139,11 +225,13 @@ class ServiceTechnicianDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [TokenAuthentication]
 
 class ServiceTechnicianListCreateAPIView(generics.ListCreateAPIView):
+    #permission_classes = [AllowAny, ]
     queryset = ServiceTechnician.objects.all()
     serializer_class = ServiceTechnicianSerializer
     permission_classes = [IsAuthenticated] 
     authentication_classes = [TokenAuthentication]
 
+    
 class ServiceTechnicianDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = ServiceTechnician.objects.all()
     serializer_class = ServiceTechnicianSerializer

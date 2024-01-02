@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "computerserviceapp.apps.ComputerServiceConfig",
     "rest_framework",
     "rest_framework.authtoken",
+    
+   
 ]
 
 MIDDLEWARE = [
@@ -84,6 +86,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+AUTH_USER_MODEL = 'computerserviceapp.ServiceTechnician'
 
 
 REST_FRAMEWORK = {
@@ -92,8 +95,11 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
 }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

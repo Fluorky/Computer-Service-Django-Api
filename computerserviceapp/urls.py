@@ -16,6 +16,13 @@ from .views import (
     WarehouseDetailAPIView, WarehouseDetailUpdateDeleteAPIView,
     CreateUserView, LoginView
 )
+"""
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .views import (
+    # your other views
+    CreateUserView,
+    LoginView
+)"""
 from rest_framework.authtoken.views import obtain_auth_token  
 
 urlpatterns = [
@@ -57,4 +64,3 @@ urlpatterns = [
     path('api/token/', obtain_auth_token, name='obtain-token'),
     path('api/login/', LoginView.as_view(), name='login'),
 ]
-
