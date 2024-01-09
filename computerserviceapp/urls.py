@@ -1,66 +1,30 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.authtoken.views import obtain_auth_token
 from .views import (
-    ServiceRequestListAPIView, ServiceRequestDetailAPIView,
-    ServiceRequestListCreateAPIView, ServiceRequestDetailUpdateDeleteAPIView,
-    InvoiceListAPIView, InvoiceDetailAPIView,
-    InvoiceListCreateAPIView, InvoiceDetailUpdateDeleteAPIView,
-    PartListAPIView, PartDetailAPIView,
-    PartListCreateAPIView, PartDetailUpdateDeleteAPIView,
-    ServiceTechnicianListAPIView, ServiceTechnicianDetailAPIView,
-    ServiceTechnicianListCreateAPIView, ServiceTechnicianDetailUpdateDeleteAPIView,
-    CustomerListAPIView, CustomerDetailAPIView,
-    CustomerListCreateAPIView, CustomerDetailUpdateDeleteAPIView,
-    RepairLogListAPIView, RepairLogDetailAPIView,
-    RepairLogListCreateAPIView, RepairLogDetailUpdateDeleteAPIView,
-    WarehouseListAPIView, WarehouseListCreateAPIView,
-    WarehouseDetailAPIView, WarehouseDetailUpdateDeleteAPIView,
-    CreateUserView, LoginView
+    CreateUserView, LoginView,
+    ServiceRequestAPIView, InvoiceAPIView,
+    PartAPIView, ServiceTechnicianAPIView,
+    CustomerAPIView, RepairLogAPIView,
+    WarehouseAPIView
 )
-"""
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views import (
-    # your other views
-    CreateUserView,
-    LoginView
-)"""
-from rest_framework.authtoken.views import obtain_auth_token  
-
 urlpatterns = [
-    path('api/service-requests/', ServiceRequestListAPIView.as_view(), name='service_request_list_api'),
-    path('api/service-requests/<int:pk>/', ServiceRequestDetailAPIView.as_view(), name='service_request_detail_api'),
-    path('api/service-requests/', ServiceRequestListCreateAPIView.as_view(), name='service_request_list_create_api'),
-    path('api/service-requests/<int:pk>/', ServiceRequestDetailUpdateDeleteAPIView.as_view(), name='service_request_detail_update_delete_api'),
-
-    path('api/invoices/', InvoiceListAPIView.as_view(), name='invoice_list_api'),
-    path('api/invoices/<int:pk>/', InvoiceDetailAPIView.as_view(), name='invoice_detail_api'),
-    path('api/invoices/', InvoiceListCreateAPIView.as_view(), name='invoice_list_create_api'),
-    path('api/invoices/<int:pk>/', InvoiceDetailUpdateDeleteAPIView.as_view(), name='invoice_detail_update_delete_api'),
-
-    path('api/parts/', PartListAPIView.as_view(), name='part_list_api'),
-    path('api/parts/<int:pk>/', PartDetailAPIView.as_view(), name='part_detail_api'),
-    path('api/parts/', PartListCreateAPIView.as_view(), name='part_list_create_api'),
-    path('api/parts/<int:pk>/', PartDetailUpdateDeleteAPIView.as_view(), name='part_detail_update_delete_api'),
-
-    path('api/service-technicians/', ServiceTechnicianListAPIView.as_view(), name='service_technician_list_api'),
-    path('api/service-technicians/<int:pk>/', ServiceTechnicianDetailAPIView.as_view(), name='service_technician_detail_api'),
-    path('api/service-technicians/', ServiceTechnicianListCreateAPIView.as_view(), name='service_technician_list_create_api'),
-    path('api/service-technicians/<int:pk>/', ServiceTechnicianDetailUpdateDeleteAPIView.as_view(), name='service_technician_detail_update_delete_api'),
-
-    path('api/customers/', CustomerListAPIView.as_view(), name='customer_list_api'),
-    path('api/customers/<int:pk>/', CustomerDetailAPIView.as_view(), name='customer_detail_api'),
-    path('api/customers/', CustomerListCreateAPIView.as_view(), name='customer_list_create_api'),
-    path('api/customers/<int:pk>/', CustomerDetailUpdateDeleteAPIView.as_view(), name='customer_detail_update_delete_api'),
-
-    path('api/repair-logs/',RepairLogListAPIView.as_view(), name='repair_log_list_api'),
-    path('api/repair-logs/<int:pk>/', RepairLogDetailAPIView.as_view(), name='repair_log_detail_api'),
-    path('api/repair-logs/', RepairLogListCreateAPIView.as_view(), name='repair_log_list_create_api'),
-    path('api/repair-logs/<int:pk>/', RepairLogDetailUpdateDeleteAPIView.as_view(), name='repair_log_detail_update_delete_api'),
-
-    path('api/warehouses/', WarehouseListAPIView.as_view(), name='service_request_list_api'),
-    path('api/warehouses/<int:pk>/', WarehouseDetailAPIView.as_view(), name='service_request_detail_api'),
-    path('api/warehouses/', WarehouseListCreateAPIView.as_view(), name='service_request_list_create_api'),
-    path('api/warehouses/<int:pk>/', WarehouseDetailUpdateDeleteAPIView.as_view(), name='service_request_detail_update_delete_api'),
-    path('api/create-user/',  CreateUserView.as_view(), name='create_user'),
-    path('api/token/', obtain_auth_token, name='obtain-token'),
-    path('api/login/', LoginView.as_view(), name='login'),
+    path('api/', include([
+        path('service-requests/', ServiceRequestAPIView.as_view(), name='service_request_api'),
+        path('service-requests/<int:pk>/', ServiceRequestAPIView.as_view(), name='service_request_detail_api'),
+        path('invoices/', InvoiceAPIView.as_view(), name='invoice_api'),
+        path('invoices/<int:pk>/', InvoiceAPIView.as_view(), name='invoice_detail_api'),
+        path('parts/', PartAPIView.as_view(), name='part_api'),
+        path('parts/<int:pk>/', PartAPIView.as_view(), name='part_detail_api'),
+        path('service-technicians/', ServiceTechnicianAPIView.as_view(), name='service_technician_api'),
+        path('service-technicians/<int:pk>/', ServiceTechnicianAPIView.as_view(), name='service_technician_detail_api'),
+        path('customers/', CustomerAPIView.as_view(), name='customer_api'),
+        path('customers/<int:pk>/', CustomerAPIView.as_view(), name='customer_detail_api'),
+        path('repair-logs/', RepairLogAPIView.as_view(), name='repair_log_api'),
+        path('repair-logs/<int:pk>/', RepairLogAPIView.as_view(), name='repair_log_detail_api'),
+        path('warehouses/', WarehouseAPIView.as_view(), name='warehouse_api'),
+        path('warehouses/<int:pk>/', WarehouseAPIView.as_view(), name='warehouse_detail_api'),
+        path('create-user/', CreateUserView.as_view(), name='create_user'),
+        path('token/', obtain_auth_token, name='obtain-token'),
+        path('login/', LoginView.as_view(), name='login'),
+    ])),
 ]
