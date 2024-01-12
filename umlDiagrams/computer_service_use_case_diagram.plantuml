@@ -16,6 +16,20 @@ usecase "Review Service Request" as ReviewServiceRequest
 usecase "Escalate Service Request" as EscalateServiceRequest
 usecase "Handle Parts" as HandleParts
 usecase "Generate Repair Log" as GenerateRepairLog
+usecase "Track Service History" as TrackServiceHistory
+usecase "Request Quote" as RequestQuote
+usecase "Approve Quote" as ApproveQuote
+usecase "Track Parts Inventory" as TrackPartsInventory
+usecase "Manage Customer Profile" as ManageCustomerProfile
+usecase "Manage Technician Schedule" as ManageTechnicianSchedule
+usecase "Submit Service Request" as SubmitServiceRequest
+usecase "Start Work on Service Request" as StartWork
+usecase "Mark Service Request In Progress" as MarkInProgress
+usecase "Mark Service Request Complete" as MarkComplete
+usecase "Mark Service Request Incomplete" as MarkIncomplete
+usecase "Mark Service Request Skipped" as MarkSkipped
+usecase "Make Payment" as MakePayment
+usecase "View Service Request Details" as ViewServiceRequestDetails
 
 Customer --> (CreateServiceRequest)
 Admin --> (AssignTechnician)
@@ -32,5 +46,19 @@ ServiceTechnician --> (ReviewServiceRequest)
 Admin --> (EscalateServiceRequest)
 Admin --> (HandleParts)
 Admin --> (GenerateRepairLog)
+Customer --> (TrackServiceHistory)
+Customer --> (RequestQuote)
+Admin --> (ApproveQuote)
+Admin --> (TrackPartsInventory)
+Customer --> (ManageCustomerProfile)
+Admin --> (ManageTechnicianSchedule)
+Customer --> (SubmitServiceRequest)
+ServiceTechnician --> (StartWork)
+ServiceTechnician --> (MarkInProgress)
+ServiceTechnician --> (MarkComplete)
+ServiceTechnician --> (MarkIncomplete)
+ServiceTechnician --> (MarkSkipped)
+Customer --> (MakePayment)
+Customer --> (ViewServiceRequestDetails)
 
 @enduml

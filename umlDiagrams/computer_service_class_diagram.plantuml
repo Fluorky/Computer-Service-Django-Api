@@ -6,7 +6,19 @@ abstract class models.Model {
 abstract class BasicInfo {
   + name: String
 }
+abstract class django.contrib.auth.models.AbstractUser{
 
+    +username : CharField
+    +first_name : CharField
+    +last_name : CharField
+    +email : EmailField
+    +is_staff : BooleanField
+    +is_active : BooleanField
+    +date_joined : DateTimeField
+    +get_full_name(self)
+    +get_short_name(self)
+    +email_user(self, subject, message, from_email=None, **kwargs)
+}
 abstract class CommonInfo {
   + name: String
   + price: Integer
@@ -126,9 +138,7 @@ class Customer {
 }
 
 class Admin {
-  + address: Address
-  + username: String
-  + password: String
+  +is_superuser : Boolean
   + def __str__(self) : constructor
   + assign_technician(service_request: ServiceRequest, technician: ServiceTechnician)
   + generate_invoice(service_request: ServiceRequest)
@@ -197,7 +207,7 @@ ServiceRequest *-- Customer : requested_by
 ServiceRequest *-- ServiceTechnician : owned_by
 Invoice <--* Part
 Part -- Supplier
-Person --|> ServiceTechnician
+django.contrib.auth.models.AbstractUser --|> ServiceTechnician
 Person --|> Customer
 ServiceRequest -- RepairLog
 Part --|> Warehouse

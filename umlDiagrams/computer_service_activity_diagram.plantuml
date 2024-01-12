@@ -1,19 +1,21 @@
 @startuml
 
-(*) --> "Create service request" as Create_Service_Request 
---> "Assign to technician" as Assign_Technician
---> "Review service request" as Review_Service_Request 
+(*) --> "Login as Technician" as Login_Technician
+--> "Create Service Request" as Create_Service_Request 
+--> "Assign to Technician" as Assign_Technician
+--> "Review Service Request" as Review_Service_Request 
 --> ===S1=== 
 if "Is correct request" then
 -->[yes] ===S2===
 else 
--->[no] "Correct service request" as Correct
+-->[no] "Correct Service Request" as Correct
 --> ===S2===
---> "Approve service request" as Approve_SR
+--> "Approve Service Request" as Approve_SR
 if "Is approved" then
--->[no] (*)
+-->[no] "Logout"
+--> (*)
 else 
--down->[yes] Start_Perform_Service : Start Perform Service
+-down->[yes] "Start Perform Service" as Start_Perform_Service
 if "Cause of a problem is hardware part" then
 --> [no] "Performing Service Request" as Performing
 else 
@@ -21,33 +23,36 @@ else
 if "Is part in warehouse" then
 -->[yes] ===S4===
 else 
--->[no] "Order part" as Order
+-->[no] "Order Part" as Order
 if "Is part available to order" then
---> [no] "Reject the service request"
+--> [no] "Reject the Service Request"
+-->  "Logout"
 -->  (*)
 else
---> [yes] Paid 
---> "Wait for delivery"
---> "Collect the delivery"
---> "Add to warehouse"
+--> [yes] "Paid" as Paid 
+--> "Wait for Delivery"
+--> "Collect the Delivery"
+--> "Add to Warehouse"
 --> ===S4===
 --> "Collect"
---> "Change part"
+--> "Change Part"
 --> "Performing Service Request" as Performing
 --> "Ending Performing Service Request"
---> Generate_Repair_Log : Generate Repair Log
---> Payment : Paying for parts and service requests
---> Generate_Invoice : Complete Service
+--> Generate Repair Log : Generate_Repair_Log
+--> Payment : Paying for Parts and Service Requests
+--> Generate Invoice : Complete Service
 --> ===S5===
 if "Is customer satisfied" then
 -->[no] "Get Negative Customer Feedback"
 --> "Review Feedback"
---> "Corect service request"
---> ===S5===
+--> "Correct Service Request"
+--> "Logout"
+--> (*)
 else
 -->[yes] "Get Positive Customer Feedback" as Customer_Feedback
---> Update_Customer_Record : Update Customer Record
+--> "Update Customer Record"
 --> "Service Request Completed"
+--> "Logout"
 --> (*)
 
 @enduml
