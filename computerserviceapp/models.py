@@ -150,13 +150,6 @@ class ServiceTechnician(AbstractUser):
 
 
 class Customer(Person):
-    """
-    address_line1 = models.CharField(max_length=255, blank=True, null=True)
-    address_line2 = models.CharField(max_length=255, blank=True, null=True)
-    postal_code = models.CharField(max_length=20, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    state = models.CharField(max_length=100, blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)"""
 
     address = models.ForeignKey('Address', on_delete=models.CASCADE,null=True)
     service_requests = models.ManyToManyField(ServiceRequest, related_name='customers')
@@ -166,8 +159,8 @@ class Customer(Person):
         verbose_name_plural = 'Customers'
 
     def __str__(self):  
-        return f"{self.name} {self.surname}"
-       #return f"{self.name} {self.surname} {self.address_line1} {self.address_line2} {self.city} {self.country} {self.postal_code} {self.state}"
+        return f"{self.name} {self.surname} "
+       
 
 
 class RepairLog(models.Model):
