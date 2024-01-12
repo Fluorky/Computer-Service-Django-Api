@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse
 from .serializers import (
@@ -61,7 +62,7 @@ class CreateUserView(APIView):
 
         return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
 
-
+"""
 class CustomAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = None
     serializer_class = None
@@ -71,23 +72,53 @@ class CustomAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         if 'pk' in self.kwargs:
             return generics.get_object_or_404(self.queryset, pk=self.kwargs['pk'])
-        return self.queryset.all()
+        return self.queryset
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        return self.create(request, *args, **kwargs)"""
+    
+
+
+
+class CustomAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = None
+    serializer_class = None
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+ 
+    def get(self, request, *args, **kwargs):
+        if 'pk' in kwargs:
+            instance = get_object_or_404(self.queryset, pk=kwargs['pk'])
+            serializer = self.serializer_class(instance)
+        else:
+            queryset = self.queryset.all()
+            serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
-
+  
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
 
 class ServiceRequestAPIView(CustomAPIView):
     queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
+
 
 class InvoiceAPIView(CustomAPIView):
     queryset = Invoice.objects.all()
@@ -100,6 +131,7 @@ class PartAPIView(CustomAPIView):
 class ServiceTechnicianAPIView(CustomAPIView):
     queryset = ServiceTechnician.objects.all()
     serializer_class = ServiceTechnicianSerializer
+
 
 class CustomerAPIView(CustomAPIView):
     queryset = Customer.objects.all()

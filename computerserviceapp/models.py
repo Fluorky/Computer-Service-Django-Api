@@ -133,7 +133,6 @@ class ServiceTechnician(AbstractUser):
     email = models.EmailField(unique=True)  
     password = models.CharField(max_length=128) 
     phone_number = models.CharField(max_length=11,null=True)
-
     USERNAME_FIELD = 'email'  # Use email as the username field
 
     REQUIRED_FIELDS = ['username']  # Add any additional required fields
