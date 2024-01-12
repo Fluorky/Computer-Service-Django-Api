@@ -136,6 +136,14 @@ class CreateUserView(APIView):
 
         return Response({'message': 'Service technician created successfully'}, status=status.HTTP_201_CREATED)
 """
+
+
+
+
+
+
+
+"""
 class ServiceRequestListAPIView(generics.ListCreateAPIView):
     queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
@@ -312,3 +320,73 @@ class WarehouseDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 
+"""
+
+class CustomAPIView(generics.GenericAPIView):
+    queryset = None
+    serializer_class = None
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get_object(self, pk):
+        try:
+            return self.queryset.objects.get(pk=pk)
+        except self.queryset.model.DoesNotExist:
+            raise Response({'error': f'{self.queryset.model.__name__} not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, *args, **kwargs):
+        if 'pk' in kwargs:
+            instance = self.get_object(kwargs['pk'])
+            serializer = self.serializer_class(instance)
+        else:
+            queryset = self.queryset.all()
+            serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, *args, **kwargs):
+        instance = self.get_object(kwargs['pk'])
+        serializer = self.serializer_class(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object(kwargs['pk'])
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ServiceRequestAPIView(CustomAPIView):
+    queryset = ServiceRequest.objects.all()
+    serializer_class = ServiceRequestSerializer
+
+class InvoiceAPIView(CustomAPIView):
+    queryset = Invoice.objects.all()
+    serializer_class = InvoiceSerializer
+
+class PartAPIView(CustomAPIView):
+    queryset = Part.objects.all()
+    serializer_class = PartSerializer
+
+class ServiceTechnicianAPIView(CustomAPIView):
+    queryset = ServiceTechnician.objects.all()
+    serializer_class = ServiceTechnicianSerializer
+
+class CustomerAPIView(CustomAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+class RepairLogAPIView(CustomAPIView):
+    queryset = RepairLog.objects.all()
+    serializer_class = RepairLogSerializer
+
+class WarehouseAPIView(CustomAPIView):
+    queryset = Warehouse.objects.all()
+    serializer_class = WarehouseSerializer
