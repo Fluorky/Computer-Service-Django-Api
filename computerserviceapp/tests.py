@@ -3,24 +3,90 @@
 import json
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer
+import pytz
+from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer,Address,Comment,RepairLog,Supplier,Warehouse
 from django.contrib.auth.hashers import make_password
 from django.test import override_settings
-
-
+from django.utils import timezone
+import datetime
 class BaseTestCase(TestCase):
     
     def setUp(self):
         # Create test data for models
-        self.hashed_password = make_password('Test123.')
-        self.customer = Customer.objects.create(name='John', surname='Doe', email='john@example.com', phone_number='1234567890')
-        self.technician = ServiceTechnician.objects.create(first_name='TechIT', last_name='Guy', username='Tech', email='tech@example.com', phone_number='9876543210', specialization='Computer Repair',is_superuser=True,is_staff=True,is_active=True, password=self.hashed_password)
-        self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
-        self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
-        self.invoice = Invoice.objects.create(name='Invoice', total_amount=100.00)
+        self.hashed_password = make_password(password='Test123.')
+        self.customer = Customer.objects.create(
+            name='John', 
+            surname='Doe', 
+            email='john@example.com', 
+            phone_number='1234567890'
+        )
+        self.technician = ServiceTechnician.objects.create(
+            first_name='TechIT', 
+            last_name='Guy', 
+            username='Tech', 
+            email='tech@example.com', 
+            phone_number='9876543210', 
+            specialization='Computer Repair',
+            is_superuser=True,
+            is_staff=True,
+            is_active=True, 
+            password=self.hashed_password
+        )
+
+        self.service_request = ServiceRequest.objects.create(
+            name='Service', 
+            description='Fix my computer', 
+            requested_by=self.customer, 
+            owned_by=self.technician
+        )
+        
+        self.part = Part.objects.create(
+            name='Hard Drive', 
+            description='1TB HDD', 
+            quantity_in_stock=10
+        )
+
+        self.invoice = Invoice.objects.create(
+            name='Invoice', 
+            total_amount=100.00
+        )
+
         self.invoice.parts.set([self.part])
+
         self.invoice.service_requests.set([self.service_request])
-   
+
+        self.repair_log = RepairLog.objects.create(
+            start_time='2023-01-18T12:00:00Z',
+            end_time='2023-01-18T15:00:00Z',
+            service_request=self.service_request,
+            technician_notes='Fixed the issue'
+        )
+        self.address = Address.objects.create(
+            address_line1='123 Main St',
+            address_line2='Apt 4',
+            postal_code='12345',
+            city='Cityville',
+            state='Stateville',
+            country='Countryland'
+        )
+        self.supplier = Supplier.objects.create(
+            name='Supplier1',
+            address=self.address,
+            phone_number='9876543210'
+        )
+
+        self.warehouse = Warehouse.objects.create(
+            name='Warehouse1',
+            description='Main Warehouse',
+            quantity_in_stock=100,
+            supplier=self.supplier  # Make sure to set the supplier if needed
+        )
+
+        self.comment = Comment.objects.create(
+            text='This is a comment',
+            posted_by=self.technician
+        )
+
     def get_token(self):
         self.client = Client()
 
@@ -48,11 +114,11 @@ class BaseTestCase(TestCase):
 
 
     
-    def test_token_generation(self):
+    """def test_token_generation(self):
 
         response = self.client.get(reverse('service_technician_api'), headers=self.get_token())
         self.assertEqual(response.status_code,200)
-        #self.assertEqual(self.headers, "XD")
+        #self.assertEqual(self.headers, "XD")"""
     
 
 
@@ -253,7 +319,7 @@ class ServiceTechnicianTests(BaseTestCase):
         self.invoice.parts.set([self.part])
         self.invoice.service_requests.set([self.service_request])"""
     
-    hashed_password = make_password('Test123...')
+    #hashed_password = make_password('Test123...')
         #self.invoice = Invoice.objects.create(name='Invoice', total_amount=100.00, parts=self.part, service_requests=self.service_request)#description='Computer repair services', requested_by=self.customer, owned_by=self.technician)
     def test_service_technician_list_view(self):
         response = self.client.get(reverse('service_technician_api'),headers=super().get_token())
@@ -275,16 +341,42 @@ class ServiceTechnicianTests(BaseTestCase):
         self.assertContains(response, self.technician.specialization)
   
        
-    
-    def test_service_technician_create_view(self):
-     self.hashed_password = make_password('Test123.')
+    def test_token_generation(self):
 
-     with override_settings(USE_TZ=False):
-        
-        response = self.client.post(reverse('service_technician_api'), {'first_name':'Leon','last_name':'Guy', 'username':'tech2@example.com', 'email':'tech2@example.com', 'phone_number':'9876543210', 'specialization':'Computer Repair','is_superuser':True,'is_staff':True,'is_active':True, 'password':self.hashed_password},headers=super().get_token())
+        response = self.client.get(reverse('service_technician_api'), headers=self.get_token())
+        self.assertEqual(response.status_code,200)
+
+
+    def test_service_technician_create_view(self):
+     #self.hashed_password = make_password('Test123.')
+
+     #with override_settings(USE_TZ=False):
+        response = self.client.post(
+        reverse('service_technician_api'),
+        {
+            'first_name': 'Leon',
+            'last_name': 'Guy',
+            'username': 'tech2@example.com',
+            'email': 'tech2@example.com',
+            'phone_number': '9876543210',
+            'specialization': 'Computer Repair',
+            'is_superuser': True,
+            'is_staff': True,
+            'is_active': True,
+            'password': self.hashed_password,
+            #'date_joined': timezone.now().astimezone(pytz.utc).isoformat(),
+
+            #'date_joined':datetime.datetime.now()
+            #'date_joined': timezone.now(),  # Use timezone.now() to get a datetime with time zone information
+        },
+        headers=super().get_token()
+        )
+        #self.assertEqual(response.content,"XD")
+        #response = self.client.post(reverse('service_technician_api'), {'first_name':'Leon','last_name':'Guy', 'username':'tech2@example.com', 'email':'tech2@example.com', 'phone_number':'9876543210', 'specialization':'Computer Repair','is_superuser':True,'is_staff':True,'is_active':True, 'password':self.hashed_password},headers=super().get_token())
+        self.assertEqual(response.status_code,201)
+        #self.assertEqual(201,201)
         #self.assertEqual(response.content, 201) 
-        self.assertEqual(response.status_code, 201)  # Assuming a successful creation redirects to another page
-       
+
 
     def test_service_technician_update_view(self):
         response = self.client.get(reverse('service_technician_detail_api', args=[self.technician.pk]),headers=super().get_token())

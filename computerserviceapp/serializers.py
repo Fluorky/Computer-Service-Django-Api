@@ -48,11 +48,11 @@ class ServiceTechnicianSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             #specialization=validated_data['specialization'],
             username=validated_data['email'],
-            date_joined = datetime.now()
+            #date_joined = datetime.now()
             
         )
     
-        print(validated_data['password'])
+        #print(validated_data['password'])
         technician.set_password(validated_data['password'])
         technician.save()
     

@@ -2,7 +2,7 @@ from django.db import models
 from django_fsm import FSMField, transition
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-
+from django.utils import timezone
 
 class BasicInfo(models.Model):
     name = models.CharField(max_length=100)
@@ -134,7 +134,7 @@ class ServiceTechnician(AbstractUser):
     password = models.CharField(max_length=128) 
     phone_number = models.CharField(max_length=11,null=True)
     USERNAME_FIELD = 'email'  # Use email as the username field
-
+    date_joined = models.DateTimeField(default=timezone.now)
     REQUIRED_FIELDS = ['username']  # Add any additional required fields
 
     class Meta:
