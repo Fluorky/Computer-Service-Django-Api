@@ -1,13 +1,9 @@
 # computerserviceapp/serializers.py
 
 from rest_framework import serializers
-from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse
+from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse, Comment,Supplier,Address
 from datetime import datetime
 
-class ServiceRequestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ServiceRequest
-        fields = '__all__'
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
@@ -29,12 +25,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     def get_total_amount_without_tax(self, instance):
         return instance.calculate_total_amount_without_tax()
-
-
-class PartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Part
-        fields = '__all__'
 
 
 class ServiceTechnicianSerializer(serializers.ModelSerializer):
@@ -82,6 +72,17 @@ class ServiceTechnicianSerializer(serializers.ModelSerializer):
         
         instance.save()
         return instance
+    
+
+class PartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Part
+        fields = '__all__'
+
+class ServiceRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceRequest
+        fields = '__all__'
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -98,4 +99,17 @@ class WarehouseSerializer(serializers.ModelSerializer):
         model = Warehouse
         fields = ['name', 'quantity_to_order', 'last_order_date']
 
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = "__all__"
 
+class SupplierSerializer(serializers.ModelSerializer):
+    class Meta:
+        model : Supplier
+        fields = "__all__"
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model : Address
+        fields = "__all__"

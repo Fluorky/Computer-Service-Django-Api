@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse
+from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse,Comment,Address,Supplier
 from .serializers import (
     ServiceRequestSerializer, InvoiceSerializer, PartSerializer,
-    ServiceTechnicianSerializer, CustomerSerializer, RepairLogSerializer, WarehouseSerializer
+    ServiceTechnicianSerializer, CustomerSerializer, RepairLogSerializer, WarehouseSerializer,CommentSerializer,AddressSerializer, SupplierSerializer
 )
 from rest_framework.permissions import IsAuthenticated  # Import the IsAuthenticated permission
 from rest_framework.views import APIView
@@ -119,7 +119,6 @@ class ServiceRequestAPIView(CustomAPIView):
     queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
 
-
 class InvoiceAPIView(CustomAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
@@ -132,7 +131,6 @@ class ServiceTechnicianAPIView(CustomAPIView):
     queryset = ServiceTechnician.objects.all()
     serializer_class = ServiceTechnicianSerializer
 
-
 class CustomerAPIView(CustomAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
@@ -144,3 +142,17 @@ class RepairLogAPIView(CustomAPIView):
 class WarehouseAPIView(CustomAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
+
+class CommentAPIView(CustomAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+class SupplierAPIView(CustomAPIView):
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
+
+class AddressAPIView(CustomAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+
+
