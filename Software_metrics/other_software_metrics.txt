@@ -55,3 +55,5 @@ Address: 0
 Podsumowując, projekt (diagram klas) wydaje się być dobrze zorganizowany i stosować dobre praktyki programistyczne. 
 Klasy są zorganizowane hierarchicznie, a metody i atrybuty są logicznie umieszczone w odpowiednich klasach. 
 Diagram ten jest stosunkowo płaski, co może ułatwić zrozumienie struktury projektu.
+Metody i atrybuty są logicznie umieszczone w odpowiednich klasach, a struktura dziedziczenia nie jest zbyt skomplikowana. 
+Wartości WMC i DIT są niskie, co sugeruje, że klasy są względnie proste i niezbyt złożone.
