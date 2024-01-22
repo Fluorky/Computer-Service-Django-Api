@@ -51,6 +51,7 @@ Admin: 0
 RepairLog: 0
 Warehouse: 0
 Address: 0
-Podsumowując, diagram klas wydaje się być dobrze zorganizowany i stosować dobre praktyki programistyczne. 
+
+Podsumowując, projekt (diagram klas) wydaje się być dobrze zorganizowany i stosować dobre praktyki programistyczne. 
 Klasy są zorganizowane hierarchicznie, a metody i atrybuty są logicznie umieszczone w odpowiednich klasach. 
-Diagram jest stosunkowo płaski, co może ułatwić zrozumienie struktury systemu.
+Diagram ten jest stosunkowo płaski, co może ułatwić zrozumienie struktury projektu.
