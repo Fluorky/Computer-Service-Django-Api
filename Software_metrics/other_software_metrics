@@ -1,0 +1,56 @@
+Analiza metryk dla diagramu klas w PlantUML:
+
+Weighted Methods per Class (WMC):
+
+models.Model: 0 (abstract class)
+BasicInfo: 0 (abstract class)
+CommonInfo: 6 (3 attributes + 3 methods)
+Person: 0 (abstract class)
+ServiceRequest: 11 (9 attributes + 2 methods)
+Comment: 2 (2 attributes)
+Invoice: 8 (4 attributes + 4 methods)
+Part: 2 (2 attributes)
+Supplier: 0 (attributes are not methods)
+ServiceTechnician: 3 (3 attributes)
+Customer: 3 (3 attributes)
+Admin: 11 (1 attribute + 10 methods)
+RepairLog: 4 (4 attributes)
+Warehouse: 1 (1 attribute)
+Address: 6 (6 attributes)
+
+Depth of Inheritance Tree (DIT):
+
+BasicInfo: 1
+CommonInfo: 2
+Person: 1
+ServiceRequest: 3
+Comment: 1
+Invoice: 2
+Part: 1
+Supplier: 1
+ServiceTechnician: 2
+Customer: 2
+Admin: 1
+RepairLog: 1
+Warehouse: 1
+Address: 1
+
+Number of Children (NOC):
+
+BasicInfo: 2 (CommonInfo, Person)
+CommonInfo: 2 (ServiceRequest, Part)
+Person: 2 (Customer, Admin)
+ServiceRequest: 2 (Comment, RepairLog)
+Comment: 0
+Invoice: 0
+Part: 1 (Supplier)
+Supplier: 0
+ServiceTechnician: 0
+Customer: 0
+Admin: 0
+RepairLog: 0
+Warehouse: 0
+Address: 0
+Podsumowując, diagram klas wydaje się być dobrze zorganizowany i stosować dobre praktyki programistyczne. 
+Klasy są zorganizowane hierarchicznie, a metody i atrybuty są logicznie umieszczone w odpowiednich klasach. 
+Diagram jest stosunkowo płaski, co może ułatwić zrozumienie struktury systemu.
