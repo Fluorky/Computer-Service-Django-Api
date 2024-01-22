@@ -8,7 +8,7 @@
 if "Is correct request" then
 -->[yes] ===S2===
 else 
--->[no] "Correct Service Request" as Correct
+-->[no] "Correcting Service Request" as Correct
 --> ===S2===
 --> "Approve Service Request" as Approve_SR
 if "Is approved" then
@@ -17,7 +17,8 @@ if "Is approved" then
 else 
 -down->[yes] "Start Perform Service" as Start_Perform_Service
 if "Cause of a problem is hardware part" then
---> [no] "Performing Service Request" as Performing
+--> [no]"Fix software problem" as FixSoft
+-->  "Performing Service Request" as Performing
 else 
 --> [yes] ===S3=== 
 if "Is part in warehouse" then
@@ -45,7 +46,7 @@ else
 if "Is customer satisfied" then
 -->[no] "Get Negative Customer Feedback"
 --> "Review Feedback"
---> "Correct Service Request"
+--> "Correcting Service Request"
 --> "Logout"
 --> (*)
 else
