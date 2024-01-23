@@ -52,7 +52,6 @@ class ServiceTechnicianSerializer(serializers.ModelSerializer):
             
         )
     
-        #print(validated_data['password'])
         technician.set_password(validated_data['password'])
         technician.save()
     

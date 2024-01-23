@@ -2,7 +2,7 @@
 
 participant "Customer" as Customer
 participant "PaymentService" as PaymentService
-participant "ServiceRequest" as ServiceRequest
+participant "API" as ServiceRequest
 participant "Technician" as Technician
 participant "Invoice" as Invoice
 participant "PartSupplier" as PartSupplier
@@ -13,9 +13,10 @@ Customer -> ServiceRequest: Create Service Request
 activate ServiceRequest
 
 ServiceRequest --> Customer: Service Request Created
-
+deactivate ServiceRequest
 Customer -> ServiceRequest: Review Service Request
 
+activate ServiceRequest
 ServiceRequest -> Technician: Assign Technician
 activate Technician
 
@@ -52,6 +53,7 @@ activate PaymentService
 PaymentService -> Customer: Payment Request
 Customer -> PaymentService: Payment
 PaymentService --> Customer: Payment Confirmed
+PaymentService --> ServiceRequest: Payment Confirmed
 deactivate PaymentService
 
 ServiceRequest -> Invoice: Generate Invoice

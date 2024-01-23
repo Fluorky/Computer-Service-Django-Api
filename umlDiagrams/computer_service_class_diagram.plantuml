@@ -25,13 +25,7 @@ abstract class CommonInfo {
   + tax: Double
 }
 
-abstract class Person {
-  + name: String
-  + surname: String
-  + email: Email
-  + phone_number: String
-  + address: Address
-}
+
 
 class ServiceRequest {
   + description: String
@@ -194,34 +188,31 @@ class Address {
   + class AddressDetailAPIView(generics.RetrieveAPIView): retrieve address
 }
 
-models.Model --|> BasicInfo
-BasicInfo --|> CommonInfo
-models.Model --|> Person
-models.Model --|> RepairLog
-CommonInfo --|>  ServiceRequest
-CommonInfo --|> Part
+models.Model <|-- BasicInfo
+BasicInfo <|-- CommonInfo
 
-BasicInfo --|> Invoice
+models.Model <|-- RepairLog
+CommonInfo <|--  ServiceRequest
+CommonInfo <|-- Part
+
+BasicInfo <|-- Invoice
 ServiceRequest *--> Invoice
 ServiceRequest *-- Customer : requested_by
 ServiceRequest *-- ServiceTechnician : owned_by
 Invoice <--* Part
 Part -- Supplier
-django.contrib.auth.models.AbstractUser --|> ServiceTechnician
-Person --|> Customer
+django.contrib.auth.models.AbstractUser  -- Address
+django.contrib.auth.models.AbstractUser <|-- ServiceTechnician
+django.contrib.auth.models.AbstractUser <|-- Customer
 ServiceRequest -- RepairLog
-Part --|> Warehouse
+Part -- Warehouse
 ServiceRequest "comments" *-- "1" Comment
-ServiceTechnician --|> Admin 
+ServiceTechnician <|-- Admin 
 Admin *-- ServiceRequest : Handles
-Admin *-- RepairLog : Handles
+ServiceTechnician *-- RepairLog : Handles
 ServiceTechnician *-- ServiceRequest : Manages
-Customer -- Address
-Admin -- Address
-ServiceTechnician -- Address
+
 Supplier -- Address
-ServiceRequest -- Address : billing_address
-ServiceRequest -- Address : shipping_address
 Invoice -- Address : billing_address
 Invoice -- Address : shipping_address
 

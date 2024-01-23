@@ -16,7 +16,6 @@ from django.contrib.auth import authenticate
 
 
 class LoginView(APIView):
-    #permission_classes = [AllowAny, ]
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -61,26 +60,6 @@ class CreateUserView(APIView):
         new_user.save()
 
         return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
-
-"""
-class CustomAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = None
-    serializer_class = None
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
-
-    def get_object(self):
-        if 'pk' in self.kwargs:
-            return generics.get_object_or_404(self.queryset, pk=self.kwargs['pk'])
-        return self.queryset
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)"""
-    
-
 
 
 class CustomAPIView(generics.RetrieveUpdateDestroyAPIView):

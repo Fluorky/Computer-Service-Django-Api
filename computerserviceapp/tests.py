@@ -1,14 +1,10 @@
 # computerserviceapp/tests.py
-
 import json
 from django.test import TestCase, Client
 from django.urls import reverse
-import pytz
 from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer,Address,Comment,RepairLog,Supplier,Warehouse
 from django.contrib.auth.hashers import make_password
-from django.test import override_settings
-from django.utils import timezone
-import datetime
+
 class BaseTestCase(TestCase):
     
     def setUp(self):
@@ -108,20 +104,7 @@ class BaseTestCase(TestCase):
         headers = {
             'Authorization': f'Token {token}',
         }
-        #self.headers = headers
         return headers
-
-
-
-    
-    """def test_token_generation(self):
-
-        response = self.client.get(reverse('service_technician_api'), headers=self.get_token())
-        self.assertEqual(response.status_code,200)
-        #self.assertEqual(self.headers, "XD")"""
-    
-
-
 
 
 class ModelTests(BaseTestCase):
@@ -160,10 +143,8 @@ class ServiceRequestTests(BaseTestCase):
         service_request.start_work()  # Move to 'pending' state
         self.assertEqual(service_request.state,"pending")
         service_request.mark_in_progress()  # Move to 'work_in_progress' state
-        self.assertEqual(service_request.state,"work_in_progress")
+        self.assertEqual(service_request.state,"work_in_progress") 
 
-      
-        
 
     def test_service_request_detail_view(self):
         response = self.client.get(reverse('service_request_detail_api', args=[self.service_request.pk]),headers=super().get_token())
@@ -172,13 +153,11 @@ class ServiceRequestTests(BaseTestCase):
         self.assertContains(response, self.service_request.price)
         self.assertContains(response, self.service_request.description)
      
-  
-
-
+     
     def test_service_request_create_view(self):
         response = self.client.post(reverse('service_request_api'),{'name': 'New service Request', 'description': 'New Description', 'requested_by' :1 ,'owned_by':1},headers=super().get_token())
-        self.assertEqual(response.status_code, 201)  # Assuming a successful creation redirects to another page
-       
+        self.assertEqual(response.status_code, 201)  # Assuming a successful creation redirects to another page    
+
 
     def test_service_request_update_view(self):
         response = self.client.get(reverse('service_request_detail_api', args=[self.service_request.pk]),headers=super().get_token())
@@ -191,7 +170,7 @@ class ServiceRequestTests(BaseTestCase):
         )
 
         self.assertEqual(response.status_code, 200)  # Assuming a successful update redirects to another page
-
+        
         self.service_request.refresh_from_db()
         self.assertEqual(self.service_request.name, 'New service Request')
         self.assertEqual(self.service_request.price, 100)
@@ -205,19 +184,7 @@ class ServiceRequestTests(BaseTestCase):
         self.assertFalse(ServiceRequest.objects.filter(pk=self.service_request.pk).exists())
         
 class InvoiceTests(BaseTestCase):
-    """
-    def setUp(self):
-        self.client = Client()
-        self.customer = Customer.objects.create(name='John', surname='Doe', email='john@example.com', phone_number='1234567890')
-        self.technician = ServiceTechnician.objects.create(first_name='TechIT', last_name='Guy', username="Tech", email='tech@example.com', phone_number='9876543210', specialization='Computer Repair', password="Test123.")
-        self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
-        self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
-        self.invoice = Invoice.objects.create(name='Invoice', total_amount=100.00)
-        self.invoice.parts.set([self.part])
-        self.invoice.service_requests.set([self.service_request])
-        #self.invoice = Invoice.objects.create(name='Invoice', description='Computer repair services', requested_by=self.customer, owned_by=self.technician, total_amount=100.00, part=self.part, service_request=self.service_request)
-       """
-    
+
     def test_invoice_list_view(self):
         response = self.client.get(reverse('invoice_api'),headers=super().get_token())
         self.assertEqual(response.status_code, 200)
@@ -238,8 +205,7 @@ class InvoiceTests(BaseTestCase):
 
     def test_invoice_create_view(self):
         response = self.client.post(reverse('invoice_api'), {'name': 'Invoice 3241', 'description': 'Fix screen errors', 'requested_by' :1 ,'owned_by':1,'total_amount':100.00, 'parts':1, 'service_requests':1},headers=super().get_token())
-        self.assertEqual(response.status_code, 201)  # Assuming a successful creation redirects to another page
-       
+        self.assertEqual(response.status_code, 201)  
 
     def test_invoice_update_view(self):
         response = self.client.get(reverse('invoice_detail_api', args=[self.invoice.pk]),headers=super().get_token())
@@ -251,8 +217,8 @@ class InvoiceTests(BaseTestCase):
             {'name': 'Invoice 123423', 'description': 'Fix laptop drive', 'requested_by' : 1 ,'owned_by':1,'total_amount':200.00,'parts':[1],'service_requests':[1]},
             content_type='application/json',headers=super().get_token()
         )
-        #self.assertEqual(response.content, 999)
-        self.assertEqual(response.status_code, 200)  # Assuming a successful update redirects to another page
+   
+        self.assertEqual(response.status_code, 200) 
 
         self.invoice.refresh_from_db()
         self.assertEqual(self.invoice.name, 'Invoice 123423')
@@ -282,8 +248,7 @@ class PartTests(BaseTestCase):
 
     def test_part_create_view(self):
         response = self.client.post(reverse('part_api'), {'name':'Hard Drive', 'description':'1TB HDD', 'quantity_in_stock':10},headers=super().get_token())
-        self.assertEqual(response.status_code, 201)  # Assuming a successful creation redirects to another page
-       
+        self.assertEqual(response.status_code, 201) 
 
     def test_part_update_view(self):
         response = self.client.get(reverse('part_detail_api', args=[self.part.pk]),headers=super().get_token())
@@ -295,7 +260,7 @@ class PartTests(BaseTestCase):
             content_type='application/json',headers=super().get_token()
         )
 
-        self.assertEqual(response.status_code, 200)  # Assuming a successful update redirects to another page
+        self.assertEqual(response.status_code, 200) 
 
         self.part.refresh_from_db()
         self.assertEqual(self.part.name, 'Hard Drive')
@@ -309,15 +274,7 @@ class PartTests(BaseTestCase):
         self.assertFalse(Part.objects.filter(pk=self.part.pk).exists())
 
 class ServiceTechnicianTests(BaseTestCase):
-    """  def setUp(self):
-        self.client = Client()
-        self.customer = Customer.objects.create(name='John', surname='Doe', email='john@example.com', phone_number='1234567890')
-        self.technician = ServiceTechnician.objects.create(first_name='TechIT', last_name='Guy', username="Tech", email='tech@example.com', phone_number='9876543210', specialization='Computer Repair', password="Test123.")
-        self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
-        self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
-        self.invoice = Invoice.objects.create(name='Invoice', total_amount=100.00)
-        self.invoice.parts.set([self.part])
-        self.invoice.service_requests.set([self.service_request])"""
+ 
     
     #hashed_password = make_password('Test123...')
         #self.invoice = Invoice.objects.create(name='Invoice', total_amount=100.00, parts=self.part, service_requests=self.service_request)#description='Computer repair services', requested_by=self.customer, owned_by=self.technician)
@@ -348,9 +305,7 @@ class ServiceTechnicianTests(BaseTestCase):
 
 
     def test_service_technician_create_view(self):
-     #self.hashed_password = make_password('Test123.')
 
-     #with override_settings(USE_TZ=False):
         response = self.client.post(
         reverse('service_technician_api'),
         {
@@ -364,18 +319,11 @@ class ServiceTechnicianTests(BaseTestCase):
             'is_staff': True,
             'is_active': True,
             'password': self.hashed_password,
-            #'date_joined': timezone.now().astimezone(pytz.utc).isoformat(),
-
-            #'date_joined':datetime.datetime.now()
-            #'date_joined': timezone.now(),  # Use timezone.now() to get a datetime with time zone information
         },
         headers=super().get_token()
         )
-        #self.assertEqual(response.content,"XD")
-        #response = self.client.post(reverse('service_technician_api'), {'first_name':'Leon','last_name':'Guy', 'username':'tech2@example.com', 'email':'tech2@example.com', 'phone_number':'9876543210', 'specialization':'Computer Repair','is_superuser':True,'is_staff':True,'is_active':True, 'password':self.hashed_password},headers=super().get_token())
         self.assertEqual(response.status_code,201)
-        #self.assertEqual(201,201)
-        #self.assertEqual(response.content, 201) 
+     
 
 
     def test_service_technician_update_view(self):
@@ -388,7 +336,7 @@ class ServiceTechnicianTests(BaseTestCase):
             content_type='application/json',headers=super().get_token()
         )
 
-        self.assertEqual(response.status_code, 200)  # Assuming a successful update redirects to another page
+        self.assertEqual(response.status_code, 200) 
 
         self.technician.refresh_from_db()
         self.assertEqual(self.technician.first_name, 'Rajesh')

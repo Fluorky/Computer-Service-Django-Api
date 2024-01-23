@@ -1,59 +1,53 @@
 @startuml
 
-(*) --> "Login as Technician" as Login_Technician
---> "Create Service Request" as Create_Service_Request 
+(*)--> "Create Service Request" as Create_Service_Request 
 --> "Assign to Technician" as Assign_Technician
 --> "Review Service Request" as Review_Service_Request 
---> ===S1=== 
 if "Is correct request" then
--->[yes] ===S2===
-else 
 -->[no] "Correcting Service Request" as Correct
---> ===S2===
 --> "Approve Service Request" as Approve_SR
+else
+-->[yes] "Approve Service Request" as Approve_SR
 if "Is approved" then
--->[no] "Logout"
---> (*)
+-->[no] (*)
 else 
 -down->[yes] "Start Perform Service" as Start_Perform_Service
 if "Cause of a problem is hardware part" then
 --> [no]"Fix software problem" as FixSoft
 -->  "Performing Service Request" as Performing
 else 
---> [yes] ===S3=== 
-if "Is part in warehouse" then
--->[yes] ===S4===
+--> [yes] if "Is part in warehouse" then
+-->[yes] "Collect"
 else 
 -->[no] "Order Part" as Order
 if "Is part available to order" then
 --> [no] "Reject the Service Request"
--->  "Logout"
 -->  (*)
 else
 --> [yes] "Paid" as Paid 
 --> "Wait for Delivery"
 --> "Collect the Delivery"
 --> "Add to Warehouse"
---> ===S4===
 --> "Collect"
 --> "Change Part"
 --> "Performing Service Request" as Performing
 --> "Ending Performing Service Request"
---> Generate Repair Log : Generate_Repair_Log
+if "Is problem solved" then
+-->[no] Start_Perform_Service
+else 
+--> [yes] "Complete repairing"
+-->Generate Repair Log : Generate_Repair_Log
 --> Payment : Paying for Parts and Service Requests
 --> Generate Invoice : Complete Service
---> ===S5===
 if "Is customer satisfied" then
 -->[no] "Get Negative Customer Feedback"
 --> "Review Feedback"
 --> "Correcting Service Request"
---> "Logout"
---> (*)
+-->  (*)
 else
 -->[yes] "Get Positive Customer Feedback" as Customer_Feedback
 --> "Update Customer Record"
 --> "Service Request Completed"
---> "Logout"
---> (*)
+-->  (*)
 
 @enduml

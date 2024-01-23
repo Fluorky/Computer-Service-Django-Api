@@ -199,7 +199,7 @@ class Comment(models.Model):
     
 class Supplier(models.Model):
     name = models.CharField(max_length=100)
-    #contact_person = models.ForeignKey(, on_delete=models.CASCADE)
+    #contact_person = models.ForeignKey('Person', on_delete=models.CASCADE)
     address = models.ForeignKey('Address', on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=20)
 
