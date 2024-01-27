@@ -35,15 +35,13 @@ class ServiceRequest {
   + requested_at: DateTime
   + completion_deadline: DateTime
   + priority: Integer
-  + comments: List<Comment>
-  + billing_address: Address
-  + shipping_address: Address
+  + repairLogs: List<RepairLog>
   + def __str__(self) : constructor
   + assign_technician(technician: ServiceTechnician)
   + complete_service()
   + escalate_priority()
   + generate_invoice()
-  + add_comment(comment: Comment)
+  + add_repairLog(repairLog: repairLog)
   + (REST API):
   + class ServiceRequestListCreateAPIView(generics.ListCreateAPIView): view or create service_request
   + class ServiceRequestDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete service_request
@@ -51,23 +49,14 @@ class ServiceRequest {
   + class ServiceRequestDetailAPIView(generics.RetrieveAPIView): retrieve service_request
 }
 
-class Comment {
-  + text: String
-  + posted_by: Person
-  + posted_at: DateTime
-  + def __str__(self) : constructor
-  + (REST API):
-  + class CommentListCreateAPIView(generics.ListCreateAPIView): view or create comment
-  + class CommentDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete comment
-  + class CommentListAPIView(generics.ListAPIView): view list of comments
-  + class CommentDetailAPIView(generics.RetrieveAPIView): retrieve comment
-}
+
 
 class Invoice {
   + total_amount: Decimal
   + payment_status: Boolean
   + service_requests: List<ServiceRequest>
   + parts: List<Part>
+  + maintenance_services: List <MaintenanceService>
   + billing_address: Address
   + shipping_address: Address
   + def __str__(self) : constructor
@@ -107,6 +96,7 @@ class Supplier {
 }
 
 class ServiceTechnician {
+  + is_superuser : Boolean - False
   + specialization: String
   + assigned_requests: List<ServiceRequest>
   + address: Address
@@ -131,8 +121,8 @@ class Customer {
   + class CustomerDetailAPIView(generics.RetrieveAPIView): retrieve customer
 }
 
-class Admin {
-  +is_superuser : Boolean
+class Manager {
+  + is_superuser : Boolean - True
   + def __str__(self) : constructor
   + assign_technician(service_request: ServiceRequest, technician: ServiceTechnician)
   + generate_invoice(service_request: ServiceRequest)
@@ -143,13 +133,16 @@ class Admin {
   + update_service_request(service_request: ServiceRequest)
   + delete_service_request(service_request: ServiceRequest)
   + (REST API):
-  + class AdminListCreateAPIView(generics.ListCreateAPIView): view or create admin
-  + class AdminDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete admin
-  + class AdminListAPIView(generics.ListAPIView): view list of admins
-  + class AdminDetailAPIView(generics.RetrieveAPIView): retrieve admin
+  + class ManagerListCreateAPIView(generics.ListCreateAPIView): view or create admin
+  + class ManagerDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete admin
+  + class ManagerListAPIView(generics.ListAPIView): view list of admins
+  + class ManagerDetailAPIView(generics.RetrieveAPIView): retrieve admin
 }
 
 class RepairLog {
+  + text: String
+  + posted_by: Person
+  + posted_at: DateTime
   + start_time : DateTime
   + end_time : DateTime
   + serviceRequest : ServiceRequest
@@ -188,27 +181,37 @@ class Address {
   + class AddressDetailAPIView(generics.RetrieveAPIView): retrieve address
 }
 
+class MaintenanceService{
+  + description: String
+  + def __str__(self) : constructor
+  + (REST API):
+  + class MaintenanceServiceListCreateAPIView(generics.ListCreateAPIView): view or create maintenance service
+  + class MaintenanceServiceDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete maintenance services
+  + class MaintenanceServiceListAPIView(generics.ListAPIView): view list of maintenance services
+  + class MaintenanceServiceDetailAPIView(generics.RetrieveAPIView): retrieve maintenance services
+}
+
 models.Model <|-- BasicInfo
 BasicInfo <|-- CommonInfo
 
-models.Model <|-- RepairLog
+BasicInfo <|-- RepairLog
 CommonInfo <|--  ServiceRequest
 CommonInfo <|-- Part
-
+CommonInfo <|-- MaintenanceService
 BasicInfo <|-- Invoice
 ServiceRequest *--> Invoice
 ServiceRequest *-- Customer : requested_by
 ServiceRequest *-- ServiceTechnician : owned_by
+Invoice <--* MaintenanceService
 Invoice <--* Part
 Part -- Supplier
 django.contrib.auth.models.AbstractUser  -- Address
 django.contrib.auth.models.AbstractUser <|-- ServiceTechnician
 django.contrib.auth.models.AbstractUser <|-- Customer
-ServiceRequest -- RepairLog
+ServiceRequest "repairLogs" *-- "1"  RepairLog
 Part -- Warehouse
-ServiceRequest "comments" *-- "1" Comment
-ServiceTechnician <|-- Admin 
-Admin *-- ServiceRequest : Handles
+ServiceTechnician <|-- Manager 
+Manager *-- ServiceRequest : Handles
 ServiceTechnician *-- RepairLog : Handles
 ServiceTechnician *-- ServiceRequest : Manages
 

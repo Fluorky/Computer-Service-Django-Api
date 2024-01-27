@@ -2,7 +2,7 @@
 
 actor Customer
 actor ServiceTechnician
-actor Admin
+actor Manager
 
 usecase "Create Service Request" as CreateServiceRequest
 usecase "Assign Technician" as AssignTechnician
@@ -50,15 +50,15 @@ ServiceTechnician --> (MarkInProgress)
 ServiceTechnician --> (MarkComplete)
 ServiceTechnician --> (MarkIncomplete)
 ServiceTechnician --> (MarkSkipped)
-Admin --> (EscalateServiceRequest)
-Admin --> (HandleParts)
-Admin --> (GenerateRepairLog)
-Admin --> (ManageTechnicianSchedule)
-Admin --> (ApproveQuote)
-Admin --> (TrackPartsInventory)
-Admin --> (AssignTechnician)
-Admin --> (GenerateInvoice)
-Admin --> (ViewInvoice)
+Manager --> (EscalateServiceRequest)
+Manager --> (HandleParts)
+Manager --> (GenerateRepairLog)
+Manager --> (ManageTechnicianSchedule)
+Manager --> (ApproveQuote)
+Manager --> (TrackPartsInventory)
+Manager --> (AssignTechnician)
+Manager --> (GenerateInvoice)
+Manager --> (ViewInvoice)
 
 
 @enduml

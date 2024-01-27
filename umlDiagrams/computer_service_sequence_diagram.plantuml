@@ -1,68 +1,88 @@
 @startuml
 
-participant "Customer" as Customer
+actor "Customer" as Customer
+actor "Manager" as Manager
+actor "Technician" as Technician
 participant "PaymentService" as PaymentService
-participant "API" as ServiceRequest
-participant "Technician" as Technician
-participant "Invoice" as Invoice
-participant "PartSupplier" as PartSupplier
-participant "Warehouse" as Warehouse
-participant "RepairLog" as RepairLog
-
-Customer -> ServiceRequest: Create Service Request
-activate ServiceRequest
-
-ServiceRequest --> Customer: Service Request Created
-deactivate ServiceRequest
-Customer -> ServiceRequest: Review Service Request
-
-activate ServiceRequest
-ServiceRequest -> Technician: Assign Technician
-activate Technician
-
-Technician -> ServiceRequest: Technician Assigned
-deactivate Technician
-
-ServiceRequest -> Technician: Perform Service
-activate Technician
-
-Technician -> ServiceRequest: Service Performed
-deactivate Technician
-
-ServiceRequest -> PartSupplier: Order Parts
-activate PartSupplier
-
-PartSupplier --> ServiceRequest: Parts Ordered
-deactivate PartSupplier
-
-ServiceRequest -> Warehouse: Update Warehouse
-activate Warehouse
-
-Warehouse --> ServiceRequest: Warehouse Updated
-deactivate Warehouse
-
-ServiceRequest -> RepairLog: Generate Repair Log
-activate RepairLog
-
-RepairLog --> ServiceRequest: Repair Log Generated
-deactivate RepairLog
-
-ServiceRequest -> PaymentService: Information about receivables
+control "REST API with Database" as API
+entity "ServiceRequest" as ServiceRequest
+entity "Invoice" as Invoice
+entity "PartSupplier" as PartSupplier
+entity "Warehouse" as Warehouse
+entity "RepairLog" as RepairLog
+group Service Request 
+Customer -> API: Request to Create Service Request
+activate API
+API-> API: Creating Service Request
+API-> ServiceRequest : Create Service Request
+ServiceRequest --> API : Service Request Created 
+API -> Customer: Confirm Service Request Created
+deactivate API
+Manager -> API: Review Service Request 
+activate API
+API <- Manager: Assign Technician
+API -> ServiceRequest : Assign Service Request to Technician
+ServiceRequest -> API : Confirm Assign Service Request to Technician
+Manager <- API: Technician Assigned
+deactivate API
+group serivce perform
+Technician -> API: Start Perform Service
+activate API
+API -> ServiceRequest : Start Service Perform
+ServiceRequest --> API : Started Perform Service
+API -> RepairLog: Generate Repair Log
+RepairLog --> API: Repair Log Generated
+API --> Technician : Confirm Starting Perform Service
+deactivate API
+loop while Service_Perform_in_progress = True
+Technician -> API: Update Perform Service progress
+activate API
+API -> RepairLog: Update Perform Service progress
+RepairLog --> API: Update Perform Service progress
+API -> Technician : Perform Service progress Updated
+deactivate API
+end
+group if parts are needed 
+Technician -> API: Request to Order Parts
+activate API
+API -> PartSupplier: Order Parts
+PartSupplier --> API: Parts Ordered
+API -> Warehouse: Update Warehouse
+Warehouse --> API: Warehouse Updated
+API --> Technician : Parts Ordered
+deactivate API
+end
+Technician -> API: End Perform Service
+activate API
+API  -> ServiceRequest: End Perform Service
+ServiceRequest --> API : Ended Perform Service
+API --> Technician : Confirm Ending Perform Service
+deactivate API
+end
+...5 minutes later...
+group Invoice and Payment 
+Manager -> API : Confrim information about ending service performance
+activate API
+API -> Invoice: Generate Invoice
+Invoice --> API: Generated Invoice
+API -> Technician : Generated Invoice 
+API -> Manager :  Generated Invoice
+API -> Customer : Notification about ending service perform and invoice
+Customer -> API : Confirm payment 
 activate PaymentService
-
+API -> PaymentService: Information about receivables
 PaymentService -> Customer: Payment Request
 Customer -> PaymentService: Payment
 PaymentService --> Customer: Payment Confirmed
-PaymentService --> ServiceRequest: Payment Confirmed
+PaymentService --> Manager: Payment Confirmed
+PaymentService --> Technician: Payment Confirmed
+PaymentService -> API: Payment Confirmed
 deactivate PaymentService
-
-ServiceRequest -> Invoice: Generate Invoice
-activate Invoice
-
-Invoice --> ServiceRequest: Invoice Generated
-deactivate Invoice
-
-ServiceRequest --> Customer: Service Request Completed
-deactivate ServiceRequest
+API --> Customer: Service Request Completed
+API --> Manager : Service Request Completed
+API --> Technician: Service Request Completed
+deactivate API
+end
+end
 
 @enduml

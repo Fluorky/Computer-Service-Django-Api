@@ -9,6 +9,7 @@ state ServiceRequest {
   }
   state InProgress {
   PartsHandling : Handle Parts
+  PerformingService : Performing Service
   RepairLogGenerated : Repair Log Generated
   }
   state Completed : Task completed
@@ -20,7 +21,8 @@ state ServiceRequest {
 Draft --> Open: Submit
 Open --> InProgress: Start Service
 InProgress --> PartsHandling: Handle Parts
-PartsHandling --> RepairLogGenerated: Generate Repair Log
+PartsHandling --> PerformingService: Perform Service
+PerformingService --> RepairLogGenerated: Generate Repair Log
 RepairLogGenerated --> Completed: Complete Service
 Completed --> Unpaid
 Paid --> Closed: Close Request

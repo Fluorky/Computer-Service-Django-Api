@@ -1,6 +1,6 @@
 @startuml
 
-(*)--> "Create Service Request" as Create_Service_Request 
+(*)--> "Create Service Request by Cusotmer" as Create_Service_Request 
 --> "Assign to Technician" as Assign_Technician
 --> "Review Service Request" as Review_Service_Request 
 if "Is correct request" then
@@ -9,7 +9,7 @@ if "Is correct request" then
 else
 -->[yes] "Approve Service Request" as Approve_SR
 if "Is approved" then
--->[no] (*)
+-down->[no] (*)
 else 
 -down->[yes] "Start Perform Service" as Start_Perform_Service
 if "Cause of a problem is hardware part" then
@@ -36,18 +36,27 @@ if "Is problem solved" then
 -->[no] Start_Perform_Service
 else 
 --> [yes] "Complete repairing"
--->Generate Repair Log : Generate_Repair_Log
---> Payment : Paying for Parts and Service Requests
+-->Generate Repair Log as "Generate_Repair_Log"
 --> Generate Invoice : Complete Service
-if "Is customer satisfied" then
--->[no] "Get Negative Customer Feedback"
---> "Review Feedback"
---> "Correcting Service Request"
--->  (*)
+--> Payment : Paying for Parts and Service Requests
+if "Payment completed" then
+--> [no]"The parts and the repaired device remain the property of the service center"
+-->(*)
 else
+--> [yes] if "Is customer satisfied" then
 -->[yes] "Get Positive Customer Feedback" as Customer_Feedback
 --> "Update Customer Record"
 --> "Service Request Completed"
 -->  (*)
+else
+-->[no] "Get Negative Customer Feedback"
+-->"Review Feedback"
+if "Is feedback founded"
+--> [no](*)
+else 
+-->[yes]"Correcting Service Request"
+-->Start_Perform_Service
+
+
 
 @enduml
