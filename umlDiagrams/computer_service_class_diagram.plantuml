@@ -213,8 +213,9 @@ Part -- Warehouse
 ServiceTechnician <|-- Manager 
 Manager *-- ServiceRequest : Handles
 ServiceTechnician *-- RepairLog : Handles
+RepairLog *-- Part : Handles
+RepairLog *-- MaintenanceService : Handles
 ServiceTechnician *-- ServiceRequest : Manages
-
 Supplier -- Address
 Invoice -- Address : billing_address
 Invoice -- Address : shipping_address

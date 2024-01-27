@@ -18,7 +18,7 @@ state ServiceRequest {
 }
 
 [*] --> Draft
-Draft --> Open: Submit
+Draft --> Open: Submit by Technician
 Open --> InProgress: Start Service
 InProgress --> PartsHandling: Handle Parts
 PartsHandling --> PerformingService: Perform Service
