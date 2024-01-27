@@ -15,17 +15,15 @@ abstract class django.contrib.auth.models.AbstractUser{
     +is_staff : BooleanField
     +is_active : BooleanField
     +date_joined : DateTimeField
+    +address: Address
     +get_full_name(self)
     +get_short_name(self)
     +email_user(self, subject, message, from_email=None, **kwargs)
 }
 abstract class CommonInfo {
-  + name: String
   + price: Integer
   + tax: Double
 }
-
-
 
 class ServiceRequest {
   + description: String
@@ -36,6 +34,8 @@ class ServiceRequest {
   + completion_deadline: DateTime
   + priority: Integer
   + repairLogs: List<RepairLog>
+  + parts: List<Part>
+  + maintenance_services: List <MaintenanceService>
   + def __str__(self) : constructor
   + assign_technician(technician: ServiceTechnician)
   + complete_service()
@@ -49,21 +49,19 @@ class ServiceRequest {
   + class ServiceRequestDetailAPIView(generics.RetrieveAPIView): retrieve service_request
 }
 
-
-
 class Invoice {
   + total_amount: Decimal
   + payment_status: Boolean
   + service_requests: List<ServiceRequest>
-  + parts: List<Part>
-  + maintenance_services: List <MaintenanceService>
   + billing_address: Address
   + shipping_address: Address
+  + customer : Customer
   + def __str__(self) : constructor
-  + calculate_total_amount_tax()
-  + calculate_total_amount()
+  + calculate_total_amount_tax(List<Part>, List <MaintenanceService>)
+  + calculate_total_amount(List<Part>, List <MaintenanceService>)
   + send_invoice_email()
   + mark_as_paid()
+  + get_customer_data()
   + (REST API):
   + class InvoiceListCreateAPIView(generics.ListCreateAPIView): view or create invoice
   + class InvoiceDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete invoice
@@ -85,7 +83,7 @@ class Part {
 
 class Supplier {
   + name: String
-  + contact_person: Person
+  + contact_person: django.contrib.auth.models.AbstractUser
   + address: Address
   + phone_number: String
   + (REST API):
@@ -99,8 +97,10 @@ class ServiceTechnician {
   + is_superuser : Boolean - False
   + specialization: String
   + assigned_requests: List<ServiceRequest>
-  + address: Address
   + def __str__(self) : constructor
+  + generate_repair_log(service_request: ServiceRequest)
+  + view_service_request(service_request: ServiceRequest)
+  + update_service_request(service_request: ServiceRequest)
   + (REST API):
   + class ServiceTechnicianListCreateAPIView(generics.ListCreateAPIView): view or create service_technician
   + class ServiceTechnicianDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete service_technician
@@ -109,7 +109,6 @@ class ServiceTechnician {
 }
 
 class Customer {
-  + address: Address
   + service_requests: List<ServiceRequest>
   + def __str__(self) : constructor
   + place_service_request(request: ServiceRequest)
@@ -128,9 +127,6 @@ class Manager {
   + generate_invoice(service_request: ServiceRequest)
   + escalate_service_request(service_request: ServiceRequest)
   + handle_parts(service_request: ServiceRequest)
-  + generate_repair_log(service_request: ServiceRequest)
-  + view_service_request(service_request: ServiceRequest)
-  + update_service_request(service_request: ServiceRequest)
   + delete_service_request(service_request: ServiceRequest)
   + (REST API):
   + class ManagerListCreateAPIView(generics.ListCreateAPIView): view or create admin
@@ -141,7 +137,7 @@ class Manager {
 
 class RepairLog {
   + text: String
-  + posted_by: Person
+  + posted_by: ServiceTechnician
   + posted_at: DateTime
   + start_time : DateTime
   + end_time : DateTime
@@ -193,12 +189,11 @@ class MaintenanceService{
 
 models.Model <|-- BasicInfo
 BasicInfo <|-- CommonInfo
-
 BasicInfo <|-- RepairLog
+BasicInfo <|-- Invoice
 CommonInfo <|--  ServiceRequest
 CommonInfo <|-- Part
 CommonInfo <|-- MaintenanceService
-BasicInfo <|-- Invoice
 ServiceRequest *--> Invoice
 ServiceRequest *-- Customer : requested_by
 ServiceRequest *-- ServiceTechnician : owned_by
@@ -213,10 +208,9 @@ Part -- Warehouse
 ServiceTechnician <|-- Manager 
 Manager *-- ServiceRequest : Handles
 ServiceTechnician *-- RepairLog : Handles
-RepairLog *-- Part : Handles
-RepairLog *-- MaintenanceService : Handles
 ServiceTechnician *-- ServiceRequest : Manages
 Supplier -- Address
+Invoice -- Customer
 Invoice -- Address : billing_address
 Invoice -- Address : shipping_address
 
