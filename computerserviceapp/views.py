@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse,Comment,Address,Supplier
+from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse,Address,Supplier
 from .serializers import (
     ServiceRequestSerializer, InvoiceSerializer, PartSerializer,
-    ServiceTechnicianSerializer, CustomerSerializer, RepairLogSerializer, WarehouseSerializer,CommentSerializer,AddressSerializer, SupplierSerializer
+    ServiceTechnicianSerializer, CustomerSerializer, RepairLogSerializer, WarehouseSerializer,AddressSerializer, SupplierSerializer
 )
 from rest_framework.permissions import IsAuthenticated  # Import the IsAuthenticated permission
 from rest_framework.views import APIView
@@ -121,10 +121,6 @@ class RepairLogAPIView(CustomAPIView):
 class WarehouseAPIView(CustomAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
-
-class CommentAPIView(CustomAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
 
 class SupplierAPIView(CustomAPIView):
     queryset = Supplier.objects.all()

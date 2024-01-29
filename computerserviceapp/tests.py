@@ -425,7 +425,5 @@ class Warehouse(Part):
 
 class Address(models.Model):
 
-class Comment(models.Model):
-
 class Supplier(models.Model):
 """

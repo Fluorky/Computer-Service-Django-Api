@@ -84,8 +84,6 @@ class Part {
 class Supplier {
   + name: String
   + contact_person: django.contrib.auth.models.AbstractUser
-  + address: Address
-  + phone_number: String
   + (REST API):
   + class SupplierListCreateAPIView(generics.ListCreateAPIView): view or create supplier
   + class SupplierDetailUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView): retrieve or update or delete supplier
@@ -209,7 +207,7 @@ ServiceTechnician <|-- Manager
 Manager *-- ServiceRequest : Handles
 ServiceTechnician *-- RepairLog : Handles
 ServiceTechnician *-- ServiceRequest : Manages
-Supplier -- Address
+Supplier -- django.contrib.auth.models.AbstractUser
 Invoice -- Customer
 Invoice -- Address : billing_address
 Invoice -- Address : shipping_address

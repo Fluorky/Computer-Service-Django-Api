@@ -5,7 +5,7 @@ from .views import (
     ServiceRequestAPIView, InvoiceAPIView,
     PartAPIView, ServiceTechnicianAPIView,
     CustomerAPIView, RepairLogAPIView,
-    WarehouseAPIView,  SupplierAPIView, CommentAPIView, AddressAPIView
+    WarehouseAPIView,  SupplierAPIView,  AddressAPIView
 )
 urlpatterns = [
     path('api/', include([
@@ -25,8 +25,6 @@ urlpatterns = [
         path('warehouses/<int:pk>/', WarehouseAPIView.as_view(), name='warehouse_detail_api'),
         path('address/',AddressAPIView.as_view(),name='address_api'),
         path('address/<int:pk>/',AddressAPIView.as_view(),name='address_detail_api'),
-        path('comment/',CommentAPIView.as_view(),name='comment_api'),
-        path('comment/<int:pk>/',CommentAPIView.as_view(),name='comment_detail_api'),
         path('supplier/',SupplierAPIView.as_view(),name='supplier_api'),
         path('supplier/<int:pk>/',SupplierAPIView.as_view(),name='supplier_detail_api'),
         path('create-user/', CreateUserView.as_view(), name='create_user'),

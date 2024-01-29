@@ -1,7 +1,7 @@
 # computerserviceapp/serializers.py
 
 from rest_framework import serializers
-from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse, Comment,Supplier,Address
+from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse,Supplier,Address
 from datetime import datetime
 
 
@@ -98,10 +98,6 @@ class WarehouseSerializer(serializers.ModelSerializer):
         model = Warehouse
         fields = ['name', 'quantity_to_order', 'last_order_date']
 
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = "__all__"
 
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:

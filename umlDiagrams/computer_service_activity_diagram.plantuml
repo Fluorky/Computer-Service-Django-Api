@@ -1,7 +1,7 @@
 @startuml
 
 (*)--> "Create Service Request by Cusotmer" as Create_Service_Request 
---> "Assign to Technician" as Assign_Technician
+--> "Assign to Technician by Manager" as Assign_Technician
 --> "Review Service Request" as Review_Service_Request 
 if "Is correct request" then
 -->[no] "Correcting Service Request" as Correct
@@ -36,7 +36,7 @@ if "Is problem solved" then
 -->[no] Start_Perform_Service
 else 
 --> [yes] "Complete repairing"
--->Generate Repair Log as "Generate_Repair_Log"
+--> "Generate Repair Log" as Generate_Repair_Log
 --> Generate Invoice : Complete Service
 --> Payment : Paying for Parts and Service Requests
 if "Payment completed" then
