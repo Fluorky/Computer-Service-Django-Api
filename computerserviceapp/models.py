@@ -194,7 +194,8 @@ class Address(models.Model):
 
 class Supplier(models.Model):
     name = models.CharField(max_length=100)
-    #contact_person = models.ForeignKey('Person', on_delete=models.CASCADE)
+    #contact_person = models.ForeignKey('Person', on_delete=models.CASCADE, null=True)
+    contact_person_email = models.CharField(max_length=50, null=True)
     address = models.ForeignKey('Address', on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=20)
 

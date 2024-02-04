@@ -1,9 +1,6 @@
 # computerserviceapp/serializers.py
-
 from rest_framework import serializers
 from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse,Supplier,Address
-from datetime import datetime
-
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
@@ -46,10 +43,7 @@ class ServiceTechnicianSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         technician = ServiceTechnician.objects.create(
             email=validated_data['email'],
-            #specialization=validated_data['specialization'],
-            username=validated_data['email'],
-            #date_joined = datetime.now()
-            
+            username=validated_data['email'],     
         )
     
         technician.set_password(validated_data['password'])
