@@ -1,7 +1,7 @@
 # Computer-Service-Django
 Project of Computer Service web rest API aplication in Django.
 
-This project is rest api version of my other procject https://github.com/Fluorky/Computer-Service-Django
+This project is developed rest api version of my other procject https://github.com/Fluorky/Computer-Service-Django
 The project is part of object-oriented design classes and the project is under development using plantuml diagrams.
 
 # To run this app:
