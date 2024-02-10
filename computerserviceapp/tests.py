@@ -109,17 +109,12 @@ class BaseTestCase(TestCase):
 
 class ModelTests(BaseTestCase):
 
- 
-
     def test_models(self):
         self.assertEqual(str(self.customer), 'John Doe ')
         self.assertEqual(str(self.technician), 'Tech Computer Repair')
         self.assertEqual(str(self.technician.email), 'tech@example.com')
         self.assertEqual(str(self.technician.username), 'Tech')
         self.assertEqual(str(self.technician.is_active), 'True')
-  
-    
-
 
 class ServiceRequestTests(BaseTestCase):
     
@@ -353,18 +348,7 @@ class ServiceTechnicianTests(BaseTestCase):
 
 
 class CustomerTests(BaseTestCase):
-    """def setUp(self):
-        self.client = Client()
-        self.customer = Customer.objects.create(name='John', surname='Doe', email='john@example.com', phone_number='1234567890')
-        self.technician = ServiceTechnician.objects.create(first_name='TechIT', last_name='Guy', username="Tech", email='tech@example.com', phone_number='9876543210', specialization='Computer Repair', password="Test123.")
-        self.service_request = ServiceRequest.objects.create(name='Service', description='Fix my computer', requested_by=self.customer, owned_by=self.technician)
-        self.part = Part.objects.create(name='Hard Drive', description='1TB HDD', quantity_in_stock=10)
-        self.invoice = Invoice.objects.create(name='Invoice', total_amount=100.00)
-        self.invoice.parts.set([self.part])
-        self.invoice.service_requests.set([self.service_request])
-        #self.invoice = Invoice.objects.create(name='Invoice', total_amount=100.00, parts=self.part, service_requests=self.service_request)#description='Computer repair services', requested_by=self.customer, owned_by=self.technician)
-        #self.invoice = Invoice.objects.create(name='Invoice', total_amount=100.00, parts=self.part, service_requests=self.service_request)#description='Computer repair services', requested_by=self.customer, owned_by=self.technician)
-    """
+
     def test_customer_list_view(self):
         response = self.client.get(reverse('customer_api'),headers=super().get_token())
         self.assertEqual(response.status_code, 200)

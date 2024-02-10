@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse,Address,Supplier
+from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, RepairLog, Warehouse, Address, Supplier
 from .serializers import (
     ServiceRequestSerializer, InvoiceSerializer, PartSerializer,
-    ServiceTechnicianSerializer, CustomerSerializer, RepairLogSerializer, WarehouseSerializer,AddressSerializer, SupplierSerializer
+    ServiceTechnicianSerializer, CustomerSerializer, RepairLogSerializer, WarehouseSerializer, AddressSerializer,
+    SupplierSerializer
 )
 from rest_framework.permissions import IsAuthenticated  # Import the IsAuthenticated permission
 from rest_framework.views import APIView
@@ -34,8 +35,9 @@ class LoginView(APIView):
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
 class CreateUserView(APIView):
-    #permission_classes = [AllowAny, ]
+    # permission_classes = [AllowAny, ]
     def post(self, request, *args, **kwargs):
         # Extract username and password from the request data
         username = request.data.get('username')
@@ -68,7 +70,6 @@ class CustomAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
 
- 
     def get(self, request, *args, **kwargs):
         if 'pk' in kwargs:
             instance = get_object_or_404(self.queryset, pk=kwargs['pk'])
@@ -85,49 +86,53 @@ class CustomAPIView(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
-  
+
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-
 
 
 class ServiceRequestAPIView(CustomAPIView):
     queryset = ServiceRequest.objects.all()
     serializer_class = ServiceRequestSerializer
 
+
 class InvoiceAPIView(CustomAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
+
 
 class PartAPIView(CustomAPIView):
     queryset = Part.objects.all()
     serializer_class = PartSerializer
 
+
 class ServiceTechnicianAPIView(CustomAPIView):
     queryset = ServiceTechnician.objects.all()
     serializer_class = ServiceTechnicianSerializer
+
 
 class CustomerAPIView(CustomAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
+
 class RepairLogAPIView(CustomAPIView):
     queryset = RepairLog.objects.all()
     serializer_class = RepairLogSerializer
+
 
 class WarehouseAPIView(CustomAPIView):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
 
+
 class SupplierAPIView(CustomAPIView):
     queryset = Supplier.objects.all()
     serializer_class = SupplierSerializer
 
+
 class AddressAPIView(CustomAPIView):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
-
-

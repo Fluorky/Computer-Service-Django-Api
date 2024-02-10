@@ -4,39 +4,45 @@ from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
+
 class BasicInfo(models.Model):
     name = models.CharField(max_length=100)
+
     class Meta:
         abstract = True
+
 
 class CommonInfo(BasicInfo):
     price = models.PositiveIntegerField(default=0)
-    tax = models.DecimalField(default=0,max_digits=10, decimal_places=4)
-    
+    tax = models.DecimalField(default=0, max_digits=10, decimal_places=4)
+
     class Meta:
         abstract = True
 
+
 class Person(models.Model):
     name = models.CharField(max_length=100, null=True)
-    surname = models.CharField(max_length=100,null=True)
+    surname = models.CharField(max_length=100, null=True)
     email = models.EmailField()
-    phone_number = models.CharField(max_length=11,null=True)
-    
+    phone_number = models.CharField(max_length=11, null=True)
+
     class Meta:
         abstract = True
 
 
 class ServiceRequest(CommonInfo):
     description = models.TextField()
-    requested_by = models.ForeignKey('Customer', on_delete=models.CASCADE) 
+    requested_by = models.ForeignKey('Customer', on_delete=models.CASCADE)
     owned_by = models.ForeignKey('ServiceTechnician', on_delete=models.CASCADE)
     requested_at = models.DateTimeField(auto_now_add=True)
     completion_deadline = models.DateTimeField(null=True)
     priority = models.IntegerField(default=0)
-    billing_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='service_request_billing_address',null=True)
-    shipping_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='service_request_shipping_address',null=True)
-       # Define FSMField to manage the state
-    state = FSMField(default='new')#,protected=True)
+    billing_address = models.ForeignKey('Address', on_delete=models.CASCADE,
+                                        related_name='service_request_billing_address', null=True)
+    shipping_address = models.ForeignKey('Address', on_delete=models.CASCADE,
+                                         related_name='service_request_shipping_address', null=True)
+    # Define FSMField to manage the state
+    state = FSMField(default='new')  # ,protected=True)
 
     class Meta:
         verbose_name = 'Service Request'
@@ -44,8 +50,8 @@ class ServiceRequest(CommonInfo):
 
     def __str__(self):
         return f"{self.name} {self.price} {self.description} {self.requested_by} {self.requested_at} {self.state}"
-    
-     # Define state transitions
+
+    # Define state transitions
     @transition(field=state, source='new', target='open')
     def submit_request(self):
         pass
@@ -70,11 +76,12 @@ class ServiceRequest(CommonInfo):
     def mark_skipped(self):
         pass
 
+
 class Part(CommonInfo):
     description = models.CharField(max_length=100)
     quantity_in_stock = models.PositiveIntegerField(default=0)
-    supplier = models.ForeignKey('Supplier', on_delete=models.CASCADE,null=True)
-    
+    supplier = models.ForeignKey('Supplier', on_delete=models.CASCADE, null=True)
+
     class Meta:
         verbose_name = 'Part'
         verbose_name_plural = 'Parts'
@@ -82,20 +89,24 @@ class Part(CommonInfo):
     def __str__(self):
         return f"{self.name} {self.price} {self.description} {self.quantity_in_stock}"
 
+
 class Invoice(BasicInfo):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     payment_status = models.BooleanField(default=False)
     service_requests = models.ManyToManyField(ServiceRequest, related_name='invoices')
     parts = models.ManyToManyField(Part, related_name='invoices')
-    billing_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='invoice_billing_address',null=True)
-    shipping_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='invoice_shipping_address',null=True)
+    billing_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='invoice_billing_address',
+                                        null=True)
+    shipping_address = models.ForeignKey('Address', on_delete=models.CASCADE, related_name='invoice_shipping_address',
+                                         null=True)
 
     class Meta:
         verbose_name = 'Invoice'
         verbose_name_plural = 'Invoices'
 
     def calculate_total_tax(self):
-        return sum(part.price * part.tax for part in self.parts.all()) + sum(sr.price * sr.tax for sr in self.service_requests.all())
+        return sum(part.price * part.tax for part in self.parts.all()) + sum(
+            sr.price * sr.tax for sr in self.service_requests.all())
 
     def calculate_total_amount_without_tax(self):
         return sum(part.price for part in self.parts.all()) + sum(sr.price for sr in self.service_requests.all())
@@ -108,8 +119,7 @@ class Invoice(BasicInfo):
         self.total_amount = self.calculate_total_amount_with_tax()
 
     def __str__(self):
-       return f"{self.name} {self.total_amount} {self.parts} {self.total_amount} {self.service_requests}"
-
+        return f"{self.name} {self.total_amount} {self.parts} {self.total_amount} {self.service_requests}"
 
 
 class ServiceTechnicianManager(BaseUserManager):
@@ -128,11 +138,12 @@ class ServiceTechnicianManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
+
 class ServiceTechnician(AbstractUser):
     specialization = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)  
-    password = models.CharField(max_length=128) 
-    phone_number = models.CharField(max_length=11,null=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)
+    phone_number = models.CharField(max_length=11, null=True)
     USERNAME_FIELD = 'email'  # Use email as the username field
     date_joined = models.DateTimeField(default=timezone.now)
     REQUIRED_FIELDS = ['username']  # Add any additional required fields
@@ -141,45 +152,44 @@ class ServiceTechnician(AbstractUser):
         verbose_name = 'Service Technician'
         verbose_name_plural = 'Service Technicians'
 
-
     objects = ServiceTechnicianManager()
 
     def __str__(self):
-        return f"{self.username} {self.specialization}" 
+        return f"{self.username} {self.specialization}"
 
 
 class Customer(Person):
-
-    address = models.ForeignKey('Address', on_delete=models.CASCADE,null=True)
+    address = models.ForeignKey('Address', on_delete=models.CASCADE, null=True)
     service_requests = models.ManyToManyField(ServiceRequest, related_name='customers')
 
     class Meta:
         verbose_name = 'Customer'
         verbose_name_plural = 'Customers'
 
-    def __str__(self):  
+    def __str__(self):
         return f"{self.name} {self.surname} "
-       
 
 
 class RepairLog(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    service_request = models.OneToOneField(ServiceRequest, on_delete=models.SET_NULL,null=True)
+    service_request = models.OneToOneField(ServiceRequest, on_delete=models.SET_NULL, null=True)
     technician_notes = models.TextField(null=True)
     text = models.TextField(null=True)
-    posted_by = models.ForeignKey('ServiceTechnician', on_delete=models.CASCADE,null=True)
-    posted_at = models.DateTimeField(auto_now_add=True,null=True)
+    posted_by = models.ForeignKey('ServiceTechnician', on_delete=models.CASCADE, null=True)
+    posted_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return f"{self.service_request} {self.start_time} {self.end_time}{self.text} {self.posted_by} {self.posted_at}"
 
+
 class Warehouse(Part):
-    quantity_to_order : models.PositiveIntegerField(default=0)
-    last_one_order_date : models.DateTimeField()
+    quantity_to_order: models.PositiveIntegerField(default=0)
+    last_one_order_date: models.DateTimeField()
 
     def __str__(self):
         return f"{self.name} {self.quantity_to_order} {self.last_one_order_date}"
+
 
 class Address(models.Model):
     address_line1 = models.CharField(max_length=255)
@@ -192,12 +202,14 @@ class Address(models.Model):
     def __str__(self):
         return f"{self.address_line1} {self.address_line2} {self.postal_code} {self.city} {self.state} {self.country}"
 
+
 class Supplier(models.Model):
     name = models.CharField(max_length=100)
-    #contact_person = models.ForeignKey('Person', on_delete=models.CASCADE, null=True)
+    # To do
+    # contact_person = models.ForeignKey('Person', on_delete=models.CASCADE, null=True)
     contact_person_email = models.CharField(max_length=50, null=True)
     address = models.ForeignKey('Address', on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"{self.name} {self.address} {self.phone_number}" """{self.contact_person}""" 
+        return f"{self.name} {self.address} {self.phone_number}" """{self.contact_person}"""
