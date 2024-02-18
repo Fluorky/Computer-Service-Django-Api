@@ -1,13 +1,13 @@
 # Computer-Service-Django
-Project of Computer Service web rest API aplication in Django.
+Project of Computer Service web rest API application in Django.
 
-This project is developed rest api version of my other procject https://github.com/Fluorky/Computer-Service-Django
+This project is developed rest api version of my other project https://github.com/Fluorky/Computer-Service-Django
 The project is part of object-oriented design classes and the project is under development using plantuml diagrams.
 
 # To run this app:
 1. git clone https://github.com/Fluorky/Computer-Service-Django-Api.git
 2. Go to Computer-Service-Django-Api folder
-3. Create and run virual venv using these commands in cmd 
+3. Create and run virtual venv using these commands in cmd 
 
 ***Windows***
 
@@ -42,7 +42,7 @@ The project is part of object-oriented design classes and the project is under d
 **python manage.py createsuperuser**
 
 9. Get token and use this token in app or using admin dashboard create users to using app and get token of these user
-Use this address yourIPAdress:8000 with url patch for example:
+Use this address yourIPAddress:8000 with url patch for example:
 
 **http://127.0.0.1:8000/api/token/**
 
@@ -50,7 +50,7 @@ To use this token you should write in http request header
 
 "Authorization" : "Token ***YourToken***"
 
-8. Use this address yourIPAdress:8000 with url patch to intergate with API,for example: ***http://127.0.0.1:8000/api/service-requests/4/***
+8. Use this address yourIPAddress:8000 with url patch to integrate with API,for example: ***http://127.0.0.1:8000/api/service-requests/4/***
 If you want to check it before, you should use postman or browser.
 
 

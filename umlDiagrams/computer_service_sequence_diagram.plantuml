@@ -25,7 +25,7 @@ API -> ServiceRequest : Assign Service Request to Technician
 ServiceRequest -> API : Confirm Assign Service Request to Technician
 Manager <- API: Technician Assigned
 deactivate API
-group serivce perform
+group service perform
 Technician -> API: Start Perform Service
 activate API
 API -> ServiceRequest : Start Service Perform
@@ -61,7 +61,7 @@ deactivate API
 end
 ...5 minutes later...
 group Invoice and Payment 
-Manager -> API : Confrim information about ending service performance
+Manager -> API : Confirm information about ending service performance
 activate API
 API -> Invoice: Generate Invoice
 Invoice --> API: Generated Invoice

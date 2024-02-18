@@ -52,8 +52,8 @@ RepairLog: 0
 Warehouse: 0
 Address: 0
 
-Podsumowując, projekt (diagram klas) wydaje się być dobrze zorganizowany i stosować dobre praktyki programistyczne. 
-Klasy są zorganizowane hierarchicznie, a metody i atrybuty są logicznie umieszczone w odpowiednich klasach. 
-Diagram ten jest stosunkowo płaski, co może ułatwić zrozumienie struktury projektu.
-Metody i atrybuty są logicznie umieszczone w odpowiednich klasach, a struktura dziedziczenia nie jest zbyt skomplikowana. 
-Wartości WMC i DIT są niskie, co sugeruje, że klasy są względnie proste i niezbyt złożone.
+In summary, the design (class diagram) appears to be well organized and follows good programming practices.
+Classes are organized hierarchically, and methods and attributes are logically placed in their respective classes.
+This diagram is relatively flat, which can make it easier to understand the structure of the project.
+Methods and attributes are logically placed in the corresponding classes, and the inheritance structure is not too complicated.
+The WMC and DIT values are low, suggesting that the classes are relatively simple and not too complex.

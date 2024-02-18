@@ -1,6 +1,6 @@
 @startuml
 
-(*)--> "Create Service Request by Cusotmer" as Create_Service_Request 
+(*)--> "Create Service Request by Customer" as Create_Service_Request
 --> "Assign to Technician by Manager" as Assign_Technician
 --> "Review Service Request" as Review_Service_Request 
 if "Is correct request" then
