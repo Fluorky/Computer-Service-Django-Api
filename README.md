@@ -60,14 +60,14 @@ If you want to check it before, you should use postman or browser.
 
 # Alternate you can use docker
 
-Build a Docker image:
+1. Build a Docker image:
 In the terminal, while in the project directory, run the docker build command to build a Docker image:
 
 **docker build -t image_name .**
 
 Where image_name is the name you want to give to your image.
 
-13 Start the container with the image:
+2. Start the container with the image:
 Once you've built the image, you can run the container based on it using the command 
 
 **docker run -p 8000:8000 image_name**
