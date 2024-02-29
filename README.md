@@ -58,7 +58,7 @@ If you want to check it before, you should use postman or browser.
 
 **python manage.py test computerserviceapp**
 
-Alternate you can use docker 
+# Alternate you can use docker
 
 Build a Docker image:
 In the terminal, while in the project directory, run the docker build command to build a Docker image:
