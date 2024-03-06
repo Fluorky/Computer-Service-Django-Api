@@ -22,6 +22,3 @@ COPY . /app/
 
 # Open port 8000 on the container
 EXPOSE 8000
-
-# Run the Django server inside the container
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -41,7 +41,7 @@ The project is part of object-oriented design classes and the project is under d
 
 **python manage.py createsuperuser**
 
-9. Get token and use this token in app or using admin dashboard create users to using app and get token of these user
+9. Get token and use this token in app, or you must use admin dashboard to create user to get token of these user
 Use this address yourIPAddress:8000 with url patch for example:
 
 **http://127.0.0.1:8000/api/token/**
@@ -61,13 +61,11 @@ If you want to check it before, you should use postman or browser.
 # Alternate you can use docker
 
 1. Build a Docker image:
-In the terminal, while in the project directory, run the docker build command to build a Docker image:
+In the terminal, while in the project directory, run this command to build a Docker image:
 
-**docker build -t image_name .**
+docker-compose build
 
-Where image_name is the name you want to give to your image.
+2. Start the application:
+In the terminal, while in the project directory, run this command to run a Docker image:
 
-2. Start the container with the image:
-Once you've built the image, you can run the container based on it using the command 
-
-**docker run -p 8000:8000 image_name**
+docker-compose up
