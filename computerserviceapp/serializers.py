@@ -88,7 +88,7 @@ class WarehouseSerializer(serializers.ModelSerializer):
 
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
-        model: Supplier
+        model = Supplier
         fields = "__all__"
 
 
