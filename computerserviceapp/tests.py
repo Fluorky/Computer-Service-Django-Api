@@ -270,9 +270,6 @@ class PartTests(BaseTestCase):
 
 class ServiceTechnicianTests(BaseTestCase):
 
-    # hashed_password = make_password('Test123...') self.invoice = Invoice.objects.create(name='Invoice',
-    # total_amount=100.00, parts=self.part, service_requests=self.service_request)#description='Computer repair
-    # services', requested_by=self.customer, owned_by=self.technician)
     def test_service_technician_list_view(self):
         response = self.client.get(reverse('service_technician_api'), headers=super().get_token())
         self.assertEqual(response.status_code, 200)
@@ -394,6 +391,58 @@ class CustomerTests(BaseTestCase):
         self.assertEqual(response.status_code, 204)  # Assuming a successful deletion redirects to another page
         self.assertFalse(Customer.objects.filter(pk=self.customer.pk).exists())
 
+
+class RepairLogTests(TestCase):
+    def test_create_repair_log(self):
+        repair_log = RepairLog.objects.create(
+            start_time='2023-01-18T12:00:00Z',
+            end_time='2023-01-18T15:00:00Z',
+            service_request=None,  # insert a service request instance if needed
+            technician_notes='Fixed the issue'
+        )
+        self.assertTrue(isinstance(repair_log, RepairLog))
+
+
+class WarehouseTests(TestCase):
+    def test_create_warehouse(self):
+        warehouse = Warehouse.objects.create(
+            name='Warehouse1',
+            description='Main Warehouse',
+            quantity_in_stock=100,
+            supplier=None,  # insert a supplier instance if needed
+        )
+        self.assertTrue(isinstance(warehouse, Warehouse))
+
+
+class AddressTests(TestCase):
+    def test_create_address(self):
+        address = Address.objects.create(
+            address_line1='123 Main St',
+            address_line2='Apt 4',
+            postal_code='12345',
+            city='Cityville',
+            state='Stateville',
+            country='Countryland'
+        )
+        self.assertTrue(isinstance(address, Address))
+
+
+class SupplierTests(TestCase):
+    def test_create_supplier(self):
+        address = Address.objects.create(
+            address_line1='123 Main St',
+            address_line2='Apt 4',
+            postal_code='12345',
+            city='Cityville',
+            state='Stateville',
+            country='Countryland'
+        )
+        supplier = Supplier.objects.create(
+            name='Supplier1',
+            address=address,
+            phone_number='9876543210'
+        )
+        self.assertTrue(isinstance(supplier, Supplier))
 
 # TO DO #
 # Creating tests of these classes
