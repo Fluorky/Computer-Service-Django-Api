@@ -4,6 +4,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, Address, RepairLog, Supplier, Warehouse
 from django.contrib.auth.hashers import make_password
+from django.utils import timezone
 
 
 class BaseTestCase(TestCase):
@@ -393,30 +394,63 @@ class CustomerTests(BaseTestCase):
 
 
 class RepairLogTests(TestCase):
-    def test_create_repair_log(self):
-        repair_log = RepairLog.objects.create(
-            start_time='2023-01-18T12:00:00Z',
-            end_time='2023-01-18T15:00:00Z',
-            service_request=None,  # insert a service request instance if needed
+    def setUp(self):
+        self.repair_log = RepairLog.objects.create(
+            start_time=timezone.datetime(2023, 1, 18, 12, 0, tzinfo=timezone.utc),
+            end_time=timezone.datetime(2023, 1, 18, 15, 0, tzinfo=timezone.utc),
+            service_request=None,  # insert a ServiceRequest instance if needed
             technician_notes='Fixed the issue'
         )
-        self.assertTrue(isinstance(repair_log, RepairLog))
+
+    def test_retrieve_repair_log(self):
+        repair_log = RepairLog.objects.get(id=self.repair_log.id)
+        expected_start_time = timezone.datetime(2023, 1, 18, 12, 0, tzinfo=timezone.utc)
+        self.assertEqual(repair_log.start_time, expected_start_time)
+
+    def test_create_repair_log(self):
+        self.assertTrue(isinstance(self.repair_log, RepairLog))
+
+    def test_update_repair_log(self):
+        self.repair_log.technician_notes = 'Replaced faulty part'
+        self.repair_log.save()
+        updated_repair_log = RepairLog.objects.get(id=self.repair_log.id)
+        self.assertEqual(updated_repair_log.technician_notes, 'Replaced faulty part')
+
+    def test_delete_repair_log(self):
+        self.repair_log.delete()
+        self.assertFalse(RepairLog.objects.filter(id=self.repair_log.id).exists())
 
 
 class WarehouseTests(TestCase):
-    def test_create_warehouse(self):
-        warehouse = Warehouse.objects.create(
+    def setUp(self):
+        self.warehouse = Warehouse.objects.create(
             name='Warehouse1',
             description='Main Warehouse',
             quantity_in_stock=100,
-            supplier=None,  # insert a supplier instance if needed
+            supplier=None,  # insert a Supplier instance if needed
         )
-        self.assertTrue(isinstance(warehouse, Warehouse))
+
+    def test_create_warehouse(self):
+        self.assertTrue(isinstance(self.warehouse, Warehouse))
+
+    def test_retrieve_warehouse(self):
+        warehouse = Warehouse.objects.get(id=self.warehouse.id)
+        self.assertEqual(warehouse.name, 'Warehouse1')
+
+    def test_update_warehouse(self):
+        self.warehouse.quantity_in_stock = 200
+        self.warehouse.save()
+        updated_warehouse = Warehouse.objects.get(id=self.warehouse.id)
+        self.assertEqual(updated_warehouse.quantity_in_stock, 200)
+
+    def test_delete_warehouse(self):
+        self.warehouse.delete()
+        self.assertFalse(Warehouse.objects.filter(id=self.warehouse.id).exists())
 
 
 class AddressTests(TestCase):
-    def test_create_address(self):
-        address = Address.objects.create(
+    def setUp(self):
+        self.address = Address.objects.create(
             address_line1='123 Main St',
             address_line2='Apt 4',
             postal_code='12345',
@@ -424,11 +458,27 @@ class AddressTests(TestCase):
             state='Stateville',
             country='Countryland'
         )
-        self.assertTrue(isinstance(address, Address))
+
+    def test_create_address(self):
+        self.assertTrue(isinstance(self.address, Address))
+
+    def test_retrieve_address(self):
+        address = Address.objects.get(id=self.address.id)
+        self.assertEqual(address.city, 'Cityville')
+
+    def test_update_address(self):
+        self.address.postal_code = '54321'
+        self.address.save()
+        updated_address = Address.objects.get(id=self.address.id)
+        self.assertEqual(updated_address.postal_code, '54321')
+
+    def test_delete_address(self):
+        self.address.delete()
+        self.assertFalse(Address.objects.filter(id=self.address.id).exists())
 
 
 class SupplierTests(TestCase):
-    def test_create_supplier(self):
+    def setUp(self):
         address = Address.objects.create(
             address_line1='123 Main St',
             address_line2='Apt 4',
@@ -437,21 +487,29 @@ class SupplierTests(TestCase):
             state='Stateville',
             country='Countryland'
         )
-        supplier = Supplier.objects.create(
-            name='Supplier1',
+        self.supplier = Supplier.objects.create(
+            name='Example Supplier',
             address=address,
             phone_number='9876543210'
         )
-        self.assertTrue(isinstance(supplier, Supplier))
 
-# TO DO #
-# Creating tests of these classes
-"""
-class RepairLog(models.Model):
+    def test_supplier_has_address(self):
+        supplier = Supplier.objects.get(id=self.supplier.id)
+        self.assertIsNotNone(supplier.address)
 
-class Warehouse(Part):
+    def test_create_supplier(self):
+        self.assertTrue(isinstance(self.supplier, Supplier))
 
-class Address(models.Model):
+    def test_retrieve_supplier(self):
+        supplier = Supplier.objects.get(id=self.supplier.id)
+        self.assertEqual(supplier.phone_number, '9876543210')
 
-class Supplier(models.Model):
-"""
+    def test_update_supplier(self):
+        self.supplier.phone_number = '1234567890'
+        self.supplier.save()
+        updated_supplier = Supplier.objects.get(id=self.supplier.id)
+        self.assertEqual(updated_supplier.phone_number, '1234567890')
+
+    def test_delete_supplier(self):
+        self.supplier.delete()
+        self.assertFalse(Supplier.objects.filter(id=self.supplier.id).exists())
