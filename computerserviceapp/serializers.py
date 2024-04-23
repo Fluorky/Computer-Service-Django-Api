@@ -46,6 +46,7 @@ class ServiceTechnicianSerializer(serializers.ModelSerializer):
         instance.is_superuser = validated_data.get('is_superuser', instance.is_superuser)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
         instance.specialization = validated_data.get('specialization', instance.specialization)
         instance.is_staff = validated_data.get('is_staff', instance.is_staff)
         password = validated_data.get('password')
