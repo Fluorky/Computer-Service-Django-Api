@@ -173,14 +173,14 @@ class Customer(Person):
 class RepairLog(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    service_request = models.OneToOneField(ServiceRequest, on_delete=models.SET_NULL, null=True)
-    technician_notes = models.TextField(null=True)
-    text = models.TextField(null=True)
+    service_request = models.OneToOneField('ServiceRequest', on_delete=models.SET_NULL, null=True)
+    technician_notes = models.TextField(null=True, blank=True)
+    text = models.TextField(null=True, blank=True)
     posted_by = models.ForeignKey('ServiceTechnician', on_delete=models.CASCADE, null=True)
-    posted_at = models.DateTimeField(auto_now_add=True, null=True)
+    posted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.service_request} {self.start_time} {self.end_time}{self.text} {self.posted_by} {self.posted_at}"
+        return f"RepairLog {self.id} from {self.start_time} to {self.end_time} {self.service_request} {self.text} {self.posted_by} {self.posted_at}"
 
 
 class Warehouse(Part):
@@ -188,7 +188,7 @@ class Warehouse(Part):
     last_one_order_date: models.DateTimeField()
 
     def __str__(self):
-        return f"{self.name} {self.quantity_to_order} {self.last_one_order_date}"
+        return f"{self.name}"
 
 
 class Address(models.Model):

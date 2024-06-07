@@ -6,26 +6,24 @@ from .serializers import (
     ServiceTechnicianSerializer, CustomerSerializer, RepairLogSerializer, WarehouseSerializer, AddressSerializer,
     SupplierSerializer
 )
-from rest_framework.permissions import IsAuthenticated  # Import the IsAuthenticated permission
+from rest_framework.permissions import IsAuthenticated, AllowAny  # Import the IsAuthenticated permission
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 
 
 class LoginView(APIView):
-
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
-
         user = authenticate(request, username=username, password=password)
 
         if user:
-
             try:
                 token = Token.objects.get(user=user)
             except Token.DoesNotExist:
@@ -33,11 +31,11 @@ class LoginView(APIView):
 
             return Response({'token': token.key, 'user': str(user)}, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class CreateUserView(APIView):
-    # permission_classes = [AllowAny, ]
+    permission_classes = [AllowAny, ]
     def post(self, request, *args, **kwargs):
         # Extract username and password from the request data
         username = request.data.get('username')

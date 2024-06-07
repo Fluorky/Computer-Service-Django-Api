@@ -5,6 +5,14 @@ from django.urls import reverse
 from .models import ServiceRequest, Invoice, Part, ServiceTechnician, Customer, Address, RepairLog, Supplier, Warehouse
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django_fsm import TransitionNotAllowed
+from django.urls import reverse
+from rest_framework.test import APITestCase, APIClient
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+import subprocess
+import unittest
 
 
 class BaseTestCase(TestCase):
@@ -77,7 +85,7 @@ class BaseTestCase(TestCase):
             name='Warehouse1',
             description='Main Warehouse',
             quantity_in_stock=100,
-            supplier=self.supplier  # Make sure to set the supplier if needed
+            supplier=self.supplier
         )
 
     def get_token(self):
@@ -144,7 +152,7 @@ class ServiceRequestTests(BaseTestCase):
         response = self.client.post(reverse('service_request_api'),
                                     {'name': 'New service Request', 'description': 'New Description', 'requested_by': 1,
                                      'owned_by': 1}, headers=super().get_token())
-        self.assertEqual(response.status_code, 201)  # Assuming a successful creation redirects to another page    
+        self.assertEqual(response.status_code, 201)  # Assuming a successful creation redirects to another page
 
     def test_service_request_update_view(self):
         response = self.client.get(reverse('service_request_detail_api', args=[self.service_request.pk]),
@@ -172,6 +180,41 @@ class ServiceRequestTests(BaseTestCase):
                                       headers=super().get_token())
         self.assertEqual(response.status_code, 204)  # Assuming a successful deletion redirects to another page
         self.assertFalse(ServiceRequest.objects.filter(pk=self.service_request.pk).exists())
+
+    def test_str_method(self):
+        expected_str = f"{self.service_request.name} {self.service_request.price} {self.service_request.description} {self.service_request.requested_by} {self.service_request.requested_at} {self.service_request.state}"
+        self.assertEqual(str(self.service_request), expected_str)
+
+    def test_mark_complete(self):
+        self.service_request.submit_request()  # Move to 'open' state
+        self.service_request.start_work()  # Move to 'pending' state
+        self.service_request.mark_in_progress()  # Move to 'work_in_progress' state
+        self.service_request.mark_complete()  # Move to 'closed_complete' state
+        self.assertEqual(self.service_request.state, 'closed_complete')
+
+    def test_mark_incomplete(self):
+        self.service_request.submit_request()  # Move to 'open' state
+        self.service_request.start_work()  # Move to 'pending' state
+        self.service_request.mark_in_progress()  # Move to 'work_in_progress' state
+        self.service_request.mark_incomplete()  # Move to 'closed_incomplete' state
+        self.assertEqual(self.service_request.state, 'closed_incomplete')
+
+    def test_mark_skipped(self):
+        self.service_request.submit_request()  # Move to 'open' state
+        self.service_request.start_work()  # Move to 'pending' state
+        self.service_request.mark_in_progress()  # Move to 'work_in_progress' state
+        self.service_request.mark_skipped()  # Move to 'closed_skipped' state
+        self.assertEqual(self.service_request.state, 'closed_skipped')
+
+    def test_invalid_transitions(self):
+        with self.assertRaises(TransitionNotAllowed):
+            self.service_request.mark_complete()
+
+        with self.assertRaises(TransitionNotAllowed):
+            self.service_request.mark_incomplete()
+
+        with self.assertRaises(TransitionNotAllowed):
+            self.service_request.mark_skipped()
 
 
 class InvoiceTests(BaseTestCase):
@@ -228,6 +271,10 @@ class InvoiceTests(BaseTestCase):
         self.assertEqual(response.status_code, 204)  # Assuming a successful deletion redirects to another page
         self.assertFalse(Invoice.objects.filter(pk=self.invoice.pk).exists())
 
+    def test_str_method(self):
+        expected_str = f"{self.invoice.name} {self.invoice.total_amount} {self.invoice.parts} {self.invoice.total_amount} {self.invoice.service_requests}"
+        self.assertEqual(str(self.invoice), expected_str)
+
 
 class PartTests(BaseTestCase):
 
@@ -267,6 +314,10 @@ class PartTests(BaseTestCase):
         response = self.client.delete(reverse('part_detail_api', args=[self.part.pk]), headers=super().get_token())
         self.assertEqual(response.status_code, 204)  # Assuming a successful deletion redirects to another page
         self.assertFalse(Part.objects.filter(pk=self.part.pk).exists())
+
+    def test_str_method(self):
+        expected_str = f"{self.part.name} {self.part.price} {self.part.description} {self.part.quantity_in_stock}"
+        self.assertEqual(str(self.part), expected_str)
 
 
 class ServiceTechnicianTests(BaseTestCase):
@@ -420,6 +471,10 @@ class RepairLogTests(TestCase):
         self.repair_log.delete()
         self.assertFalse(RepairLog.objects.filter(id=self.repair_log.id).exists())
 
+    def test_str_method(self):
+        expected_str = f"RepairLog {self.repair_log.id} from {self.repair_log.start_time} to {self.repair_log.end_time} {self.repair_log.service_request} {self.repair_log.text} {self.repair_log.posted_by} {self.repair_log.posted_at}"
+        self.assertEqual(str(self.repair_log), expected_str)
+
 
 class WarehouseTests(TestCase):
     def setUp(self):
@@ -427,7 +482,7 @@ class WarehouseTests(TestCase):
             name='Warehouse1',
             description='Main Warehouse',
             quantity_in_stock=100,
-            supplier=None,  # insert a Supplier instance if needed
+            supplier=None,
         )
 
     def test_create_warehouse(self):
@@ -446,6 +501,10 @@ class WarehouseTests(TestCase):
     def test_delete_warehouse(self):
         self.warehouse.delete()
         self.assertFalse(Warehouse.objects.filter(id=self.warehouse.id).exists())
+
+    def test_str_method(self):
+        expected_str = f"{self.warehouse.name}"
+        self.assertEqual(str(self.warehouse), expected_str)
 
 
 class AddressTests(TestCase):
@@ -475,6 +534,10 @@ class AddressTests(TestCase):
     def test_delete_address(self):
         self.address.delete()
         self.assertFalse(Address.objects.filter(id=self.address.id).exists())
+
+    def test_str_method(self):
+        expected_str = f"{self.address.address_line1} {self.address.address_line2} {self.address.postal_code} {self.address.city} {self.address.state} {self.address.country}"
+        self.assertEqual(str(self.address), expected_str)
 
 
 class SupplierTests(TestCase):
@@ -513,3 +576,228 @@ class SupplierTests(TestCase):
     def test_delete_supplier(self):
         self.supplier.delete()
         self.assertFalse(Supplier.objects.filter(id=self.supplier.id).exists())
+
+    def test_str_method(self):
+        expected_str = f"{self.supplier.name} {self.supplier.address} {self.supplier.phone_number}" """{self.contact_person}"""
+        self.assertEqual(str(self.supplier), expected_str)
+
+
+class ServiceTechnicianManagerTests(TestCase):
+
+    def setUp(self):
+        self.user_model = get_user_model()
+        self.manager = self.user_model.objects
+
+    def test_create_user_with_email_successful(self):
+        email = 'test@example.com'
+        password = 'testpassword123'
+        user = self.manager.create_user(email=email, password=password)
+
+        self.assertEqual(user.email, email)
+        self.assertTrue(user.check_password(password))
+        self.assertFalse(user.is_staff)
+        self.assertFalse(user.is_superuser)
+
+    def test_create_user_without_email_raises_error(self):
+        with self.assertRaises(ValueError) as context:
+            self.manager.create_user(email=None, password='testpassword123')
+
+        self.assertEqual(str(context.exception), 'The Email field must be set')
+
+    def test_create_superuser_with_email_successful(self):
+        email = 'super@example.com'
+        password = 'superpassword123'
+        user = self.manager.create_superuser(email=email, password=password)
+
+        self.assertEqual(user.email, email)
+        self.assertTrue(user.check_password(password))
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.is_superuser)
+
+    def test_create_superuser_with_default_fields(self):
+        email = 'super@example.com'
+        password = 'superpassword123'
+        user = self.manager.create_superuser(email=email, password=password)
+
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.is_superuser)
+
+
+class LoginViewTests(APITestCase):
+
+    # def setUp(self):
+    #     self.user = ServiceTechnician.objects.create_user(username='testuser', specialization='IT', email='testuser@example.com', password='testpass')
+    #     self.url = reverse('login')
+    #     self.token_url = reverse('obtain-token')
+    #     response = self.client.post(self.token_url, {'username': 'testuser@example.com', 'password': 'testpass'}, format='json')
+    #     self.token = response.data['token']
+    #     self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)  # Set the token for future requests
+    #
+    # def test_login_success(self):
+    #     response = self.client.post(self.url, {'username': 'testuser@example.com', 'password': 'testpass'}, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertIn('token', response.data)
+    #
+    # def test_login_failure(self):
+    #     response = self.client.post(self.url, {'username': 'testuser', 'password': 'wrongpass'}, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    #     self.assertIn('detail', response.data)
+    #     self.assertEqual(response.data['detail'], 'Invalid credentials')
+    #
+    # def test_login_token_creation(self):
+    #     print('Running test_login_token_creation')
+    #     # Ensure no token exists for the user
+    #     Token.objects.filter(user=self.user).delete()
+    #     with self.assertRaises(Token.DoesNotExist):
+    #         Token.objects.get(user=self.user)
+    #
+    #     # Authenticate and create token
+    #     response = self.client.post(self.url, {'username': 'testuser@example.com', 'password': 'testpass'},
+    #                                 format='json')
+    #     print('Response status code:', response.status_code)
+    #     print('Response data:', response.data)
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertIn('token', response.data)
+    #
+    #     # Check that the token is created
+    #     token = Token.objects.get(user=self.user)
+    #     self.assertEqual(response.data['token'], token.key)
+
+    def setUp(self):
+        self.user = ServiceTechnician.objects.create_user(
+            username='testuser',
+            specialization='IT',
+            email='testuser@example.com',
+            password='testpass'
+        )
+        self.url = reverse('login')
+
+    def test_login_success(self):
+        # print('Running test_login_success')
+        response = self.client.post(self.url, {'username': 'testuser@example.com', 'password': 'testpass'},
+                                    format='json')
+        # print('Response status code:', response.status_code)
+        # print('Response data:', response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('token', response.data)
+
+    def test_login_failure(self):
+        # print('Running test_login_failure')
+        response = self.client.post(self.url, {'username': 'testuser@example.com', 'password': 'wrongpass'},
+                                    format='json')
+        # print('Response status code:', response.status_code)
+        # print('Response data:', response.data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('detail', response.data)
+        self.assertEqual(response.data['detail'], 'Invalid credentials')
+
+    def test_login_token_creation(self):
+        # print('Running test_login_token_creation')
+        # Ensure no token exists for the user
+        Token.objects.filter(user=self.user).delete()
+        with self.assertRaises(Token.DoesNotExist):
+            Token.objects.get(user=self.user)
+
+        # Authenticate and create token
+        response = self.client.post(self.url, {'username': 'testuser@example.com', 'password': 'testpass'},
+                                    format='json')
+        # print('Response status code:', response.status_code)
+        # print('Response data:', response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('token', response.data)
+
+        # Check that the token is created
+        token = Token.objects.get(user=self.user)
+        self.assertEqual(response.data['token'], token.key)
+
+
+class CreateUserViewTests(APITestCase):
+
+    def setUp(self):
+        self.url = reverse('create_user')
+        self.client = APIClient()
+
+    def test_create_user_success(self):
+        data = {
+            'username': 'newuser',
+            'password': 'newpass',
+            'specialization' : 'IT',
+            'email': 'newuser@example.com'
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['message'], 'User created successfully')
+
+    def test_create_user_missing_fields(self):
+        response = self.client.post(self.url, {'username': 'newuser'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['error'], 'Username email and password are required')
+
+    def test_create_user_username_taken(self):
+        ServiceTechnician.objects.create_user(username='takenuser',  email='takenuser@example.com', password='testpass')
+        data = {
+            'username': 'takenuser',
+            'password': 'newpass',
+            'email': 'newuser@example.com'
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['error'], 'Username already taken')
+
+    def test_create_user_email_taken(self):
+        ServiceTechnician.objects.create_user(username='newuser2', specialization='IT', email='taken@example.com', password='testpass')
+        data = {
+            'username': 'newuser',
+            'password': 'newpass',
+            'email': 'taken@example.com'
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['error'], 'Email already taken')
+
+
+class CustomAPIViewTests(APITestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = ServiceTechnician.objects.create_user(username='testuser', specialization='IT', email='testuser@example.com', password='testpass')
+        self.token = Token.objects.create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+        self.url = reverse('address_api')  # Ensure the URL name matches your URLconf
+
+    def test_post_valid_data(self):
+        data = {
+            'address_line1': '123 Main St',
+            'address_line2': 'Apt 4',
+            'postal_code': '12345',
+            'city': 'Cityville',
+            'state': 'Stateville',
+            'country': 'Countryland',
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_post_invalid_data(self):
+        data = {
+            'invalid_field': 'value'
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class TestManageScript(unittest.TestCase):
+    def test_manage_script_runs(self):
+        # Run the management script and capture the output and error streams
+        process = subprocess.Popen(
+            ["python", "manage.py", "--version"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+        )
+        stdout, stderr = process.communicate()
+
+        # Check if there was no error running the script
+        self.assertEqual(process.returncode, 0)
+
+        # Check if the output contains expected information (for example, Django version)
+        self.assertIn("Django", stdout)
