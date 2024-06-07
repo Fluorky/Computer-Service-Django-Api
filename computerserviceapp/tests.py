@@ -800,4 +800,4 @@ class TestManageScript(unittest.TestCase):
         self.assertEqual(process.returncode, 0)
 
         # Check if the output contains expected information (for example, Django version)
-        self.assertIn("Django", stdout)
+        self.assertIn("4.2.7\n", stdout)
