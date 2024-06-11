@@ -11,9 +11,11 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+import os
 import subprocess
 import unittest
-
+from unittest.mock import patch, MagicMock
+import sys
 
 class BaseTestCase(TestCase):
 
@@ -784,7 +786,10 @@ class CustomAPIViewTests(APITestCase):
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-
+import unittest
+import subprocess
+import os
+from unittest.mock import patch, MagicMock
 class TestManageScript(unittest.TestCase):
     def test_manage_script_runs(self):
         # Run the management script and capture the output and error streams
@@ -801,3 +806,21 @@ class TestManageScript(unittest.TestCase):
 
         # Check if the output contains expected information (for example, Django version)
         self.assertIn("4.2.7\n", stdout)
+
+    @patch.dict(os.environ, {'DJANGO_SETTINGS_MODULE': 'nonexistentmodule.settings'})
+    @patch('django.core.management.execute_from_command_line', side_effect=ImportError(
+           "Couldn't import Django. Are you sure it's installed and "
+            "available on your PYTHONPATH environment variable? Did you "
+            "forget to activate a virtual environment?"))
+    def test_main_function_import_error(self, mock_execute):
+        with self.assertRaises(ImportError) as cm:
+            import manage
+            manage.main()
+
+        # Check the exception message for the expected ImportError message
+        self.assertIn(
+               "Couldn't import Django. Are you sure it's installed and "
+            "available on your PYTHONPATH environment variable? Did you "
+            "forget to activate a virtual environment?",
+            str(cm.exception)
+        )

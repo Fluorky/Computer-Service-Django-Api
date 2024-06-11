@@ -15,9 +15,9 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, get_user_model
 
-
 class LoginView(APIView):
     permission_classes = [AllowAny]
+
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
